@@ -32,7 +32,6 @@ SCRIPT2 = _read("voice_similarity_test.txt")
 SCRIPT_COURSE = _read("harvard_intro.txt")
 
 # ---- copy audio ----
-cp("refs/original_voice.wav", "s1_original.wav", "audio")
 for e in ENG:
     cp(f"outputs/{e}.wav", f"s1_{e}.wav", "audio")
 cp("refs/neil.wav", "ref_neil.wav", "audio")
@@ -192,7 +191,6 @@ HTML = f"""<!doctype html>
     <div class="sub">Kịch bản 1 (clone từ <code>refs/speaker.wav</code>) — nghe để cảm nhận tổng thể:</div>
     <pre class="script">{html.escape(SCRIPT1)}</pre>
     <table>
-      {audio_row("⭐ Giọng gốc (người)", "s1_original.wav", "ground truth")}
       {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
     </table>
   </div>
