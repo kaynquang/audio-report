@@ -115,7 +115,7 @@ clone_block = (f'<table><tr><th>Engine</th><th>Độ giống giọng ref (cosine
                + img("similarity_refline_chart.png", "Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống.")
                + img("compare_refline_waveforms.png", "Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ."))
 
-synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng.")
+synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.")
                + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
 
 
