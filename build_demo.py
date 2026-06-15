@@ -29,6 +29,7 @@ def _read(name):
 
 SCRIPT1 = _read("voice_consistency_test.txt")
 SCRIPT2 = _read("voice_similarity_test.txt")
+SCRIPT_COURSE = _read("harvard_intro.txt")
 
 # ---- copy audio ----
 cp("refs/original_voice.wav", "s1_original.wav", "audio")
@@ -38,6 +39,9 @@ cp("refs/neil.wav", "ref_neil.wav", "audio")
 for e in ENG:
     cp(f"outputs4/{e}.wav", f"rl_{e}.wav", "audio")   # kịch bản B: đúng thoại ref
     cp(f"outputs3/{e}.wav", f"sy_{e}.wav", "audio")   # kịch bản A: "See you next time."
+cp("refs/clone_src_10_20.wav", "course_ref.wav", "audio")   # đoạn 10–20s làm ref
+for e in ENG:
+    cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
 
 # ---- copy images ----
 IMGS = ["compare_waveforms.png", "compare_pitch.png", "compare_to_original.png",
@@ -207,7 +211,17 @@ HTML = f"""<!doctype html>
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
-  <h2>5) Báo cáo PDF đầy đủ</h2>
+  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone)</h2>
+  <div class="card">
+    <div class="sub">Clone từ <b>đoạn giây 10–20 của giọng gốc</b> (ref dài & sạch hơn → clone tốt hơn), đọc một đoạn giới thiệu khoá học kiểu Harvard (~15s):</div>
+    <pre class="script">{html.escape(SCRIPT_COURSE)}</pre>
+    <table>
+      {audio_row("⭐ Đoạn ref (giây 10–20 của giọng gốc)", "course_ref.wav", "nguồn clone")}
+      {''.join(audio_row(LABEL[e], f"course_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
+    </table>
+  </div>
+
+  <h2>6) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
