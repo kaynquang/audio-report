@@ -28,8 +28,6 @@ for e in ENG:
 cp("refs/neil.wav", "ref_neil.wav", "audio")
 for e in ENG:
     cp(f"outputs4/{e}.wav", f"rl_{e}.wav", "audio")
-for e in ["styletts2", "index", "chatterbox"]:
-    cp(f"outputs_belly/{e}_belly.wav", f"belly_{e}.wav", "audio")
 
 # ---- copy images ----
 IMGS = ["compare_waveforms.png", "compare_pitch.png", "compare_to_original.png",
@@ -81,16 +79,16 @@ HTML = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Athena TTS — Demo</title>
 <style>
-  :root {{ --bg:#0f1115; --card:#181b22; --fg:#e6e8eb; --mut:#9aa3af; --acc:#6ea8fe; --line:#262b35; }}
+  :root {{ --bg:#f6f7f9; --card:#ffffff; --fg:#1a1d21; --mut:#5c6670; --acc:#1a73e8; --line:#e3e6ea; }}
   * {{ box-sizing:border-box; }}
   body {{ margin:0; background:var(--bg); color:var(--fg);
     font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }}
-  header {{ padding:32px 24px; background:linear-gradient(135deg,#1b2030,#11141b); border-bottom:1px solid var(--line); }}
+  header {{ padding:32px 24px; background:linear-gradient(135deg,#eef3fb,#f6f7f9); border-bottom:1px solid var(--line); }}
   h1 {{ margin:0 0 6px; font-size:26px; }}
   h2 {{ margin:34px 0 12px; font-size:20px; border-left:3px solid var(--acc); padding-left:10px; }}
   .sub {{ color:var(--mut); }}
   main {{ max-width:1000px; margin:0 auto; padding:0 24px 60px; }}
-  .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; }}
+  .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; box-shadow:0 1px 3px rgba(20,30,50,.05); }}
   table {{ width:100%; border-collapse:collapse; margin:8px 0; }}
   td,th {{ padding:7px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }}
   th {{ color:var(--mut); font-weight:600; }}
@@ -101,9 +99,9 @@ HTML = f"""<!doctype html>
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
   figcaption {{ color:var(--mut); font-size:13px; margin-top:6px; }}
   a {{ color:var(--acc); }}
-  .pill {{ display:inline-block; background:#222836; color:var(--acc); border:1px solid var(--line);
+  .pill {{ display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }}
-  code {{ background:#222836; padding:1px 6px; border-radius:5px; }}
+  code {{ background:#eef1f5; padding:1px 6px; border-radius:5px; }}
   .grid2 {{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }}
   @media (max-width:720px) {{ .grid2 {{ grid-template-columns:1fr; }} audio {{ width:100%; }} td.lbl{{width:auto;}} }}
 </style></head>
@@ -150,21 +148,13 @@ HTML = f"""<!doctype html>
     </table>
   </div>
 
-  <h2>3) Giọng bụng (xử lý hậu kỳ: hạ formant + cao độ + EQ trầm)</h2>
-  <div class="card">
-    <div class="grid2">
-      <table>{audio_row("StyleTTS2 — gốc","s1_styletts2.wav")}{audio_row("StyleTTS2 — giọng bụng","belly_styletts2.wav")}</table>
-      <table>{audio_row("IndexTTS2 — gốc","s1_index.wav")}{audio_row("IndexTTS2 — giọng bụng","belly_index.wav")}</table>
-    </div>
-  </div>
-
-  <h2>4) Số liệu</h2>
+  <h2>3) Số liệu</h2>
   <div class="card grid2">
     <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>
     <table><tr><th>Engine</th><th>Thời gian tạo (s)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>
   </div>
 
-  <h2>5) Biểu đồ</h2>
+  <h2>4) Biểu đồ</h2>
   <div class="card">
     {img("compare_to_original.png","Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số.")}
     {img("tradeoff_scatter.png","Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên.")}
@@ -174,7 +164,7 @@ HTML = f"""<!doctype html>
     {img("compare_pitch.png","Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz.")}
   </div>
 
-  <h2>6) Báo cáo PDF đầy đủ</h2>
+  <h2>5) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}

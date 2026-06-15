@@ -3,16 +3,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Athena TTS — Demo</title>
 <style>
-  :root { --bg:#0f1115; --card:#181b22; --fg:#e6e8eb; --mut:#9aa3af; --acc:#6ea8fe; --line:#262b35; }
+  :root { --bg:#f6f7f9; --card:#ffffff; --fg:#1a1d21; --mut:#5c6670; --acc:#1a73e8; --line:#e3e6ea; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--fg);
     font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-  header { padding:32px 24px; background:linear-gradient(135deg,#1b2030,#11141b); border-bottom:1px solid var(--line); }
+  header { padding:32px 24px; background:linear-gradient(135deg,#eef3fb,#f6f7f9); border-bottom:1px solid var(--line); }
   h1 { margin:0 0 6px; font-size:26px; }
   h2 { margin:34px 0 12px; font-size:20px; border-left:3px solid var(--acc); padding-left:10px; }
   .sub { color:var(--mut); }
   main { max-width:1000px; margin:0 auto; padding:0 24px 60px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; box-shadow:0 1px 3px rgba(20,30,50,.05); }
   table { width:100%; border-collapse:collapse; margin:8px 0; }
   td,th { padding:7px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
   th { color:var(--mut); font-weight:600; }
@@ -23,9 +23,9 @@
   img { width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }
   figcaption { color:var(--mut); font-size:13px; margin-top:6px; }
   a { color:var(--acc); }
-  .pill { display:inline-block; background:#222836; color:var(--acc); border:1px solid var(--line);
+  .pill { display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }
-  code { background:#222836; padding:1px 6px; border-radius:5px; }
+  code { background:#eef1f5; padding:1px 6px; border-radius:5px; }
   .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   @media (max-width:720px) { .grid2 { grid-template-columns:1fr; } audio { width:100%; } td.lbl{width:auto;} }
 </style></head>
@@ -100,23 +100,7 @@
     </table>
   </div>
 
-  <h2>3) Giọng bụng (xử lý hậu kỳ: hạ formant + cao độ + EQ trầm)</h2>
-  <div class="card">
-    <div class="grid2">
-      <table><tr><td class="lbl">StyleTTS2 — gốc</td>
-      <td><audio controls preload="none" src="audio/s1_styletts2.wav"></audio></td>
-      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2 — giọng bụng</td>
-      <td><audio controls preload="none" src="audio/belly_styletts2.wav"></audio></td>
-      <td class="note"></td></tr></table>
-      <table><tr><td class="lbl">IndexTTS2 — gốc</td>
-      <td><audio controls preload="none" src="audio/s1_index.wav"></audio></td>
-      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2 — giọng bụng</td>
-      <td><audio controls preload="none" src="audio/belly_index.wav"></audio></td>
-      <td class="note"></td></tr></table>
-    </div>
-  </div>
-
-  <h2>4) Số liệu</h2>
+  <h2>3) Số liệu</h2>
   <div class="card grid2">
     <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>StyleTTS2</td><td>89.6</td></tr>
 <tr><td>IndexTTS2</td><td>89.5</td></tr>
@@ -131,7 +115,7 @@
 <tr><td>F5-TTS</td><td>253.7</td></tr></table>
   </div>
 
-  <h2>5) Biểu đồ</h2>
+  <h2>4) Biểu đồ</h2>
   <div class="card">
     <figure><img src="img/compare_to_original.png" alt="Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số."/>
       <figcaption>Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số.</figcaption></figure>
@@ -147,7 +131,7 @@
       <figcaption>Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz.</figcaption></figure>
   </div>
 
-  <h2>6) Báo cáo PDF đầy đủ</h2>
+  <h2>5) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>
