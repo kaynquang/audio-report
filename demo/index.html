@@ -103,14 +103,26 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>F5-TTS</td><td>35.4</td></tr></table><figure><img src="img/compare_to_original.png" alt="Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật."/>
       <figcaption>Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật.</figcaption></figure></div></details>
 
-  <h2>3) Clone giọng — đọc đúng thoại clip ref</h2>
+  <h2>3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
   <div class="card">
-    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>; cả 5 engine đọc đúng câu này để so độ giống giọng.</div>
-    <table>
-      <tr><td class="lbl">⭐ Clip ref (neil)</td>
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — dùng làm giọng mẫu nhân bản cho <b>cả 2 kịch bản</b> dưới đây.</div>
+    <table><tr><td class="lbl">⭐ Clip ref (neil)</td>
       <td><audio controls preload="none" src="audio/ref_neil.wav"></audio></td>
-      <td class="note">giọng gốc cần clone</td></tr>
-      <tr><td class="lbl">Kokoro</td>
+      <td class="note">giọng gốc cần clone</td></tr></table>
+    <div class="sub" style="margin-top:12px"><b>Kịch bản A</b> — <code>“See you next time.”</code> (câu ngắn ~1–2s)</div>
+    <table><tr><td class="lbl">Kokoro</td>
+      <td><audio controls preload="none" src="audio/sy_kokoro.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">Chatterbox</td>
+      <td><audio controls preload="none" src="audio/sy_chatterbox.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">F5-TTS</td>
+      <td><audio controls preload="none" src="audio/sy_f5.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2</td>
+      <td><audio controls preload="none" src="audio/sy_styletts2.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
+      <td><audio controls preload="none" src="audio/sy_index.wav"></audio></td>
+      <td class="note"></td></tr></table>
+    <div class="sub" style="margin-top:12px"><b>Kịch bản B</b> — <code>“Ladies and gentlemen, welcome.”</code> (đúng thoại clip ref)</div>
+    <table><tr><td class="lbl">Kokoro</td>
       <td><audio controls preload="none" src="audio/rl_kokoro.wav"></audio></td>
       <td class="note"></td></tr><tr><td class="lbl">Chatterbox</td>
       <td><audio controls preload="none" src="audio/rl_chatterbox.wav"></audio></td>
@@ -120,16 +132,11 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <td><audio controls preload="none" src="audio/rl_styletts2.wav"></audio></td>
       <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
       <td><audio controls preload="none" src="audio/rl_index.wav"></audio></td>
-      <td class="note"></td></tr>
-    </table>
+      <td class="note"></td></tr></table>
   </div>
-  <details class="card"><summary>📊 Bảng độ giống + biểu đồ (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Độ giống giọng ref (cosine 0–1)</th></tr><tr><td>IndexTTS2</td><td>0.951</td></tr>
-<tr><td>F5-TTS</td><td>0.876</td></tr>
-<tr><td>Chatterbox</td><td>0.873</td></tr>
-<tr><td>StyleTTS2</td><td>0.797</td></tr>
-<tr><td>Kokoro (không clone)</td><td>0.517</td></tr></table><figure><img src="img/similarity_refline_chart.png" alt="Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống."/>
-      <figcaption>Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống.</figcaption></figure><figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ."/>
-      <figcaption>Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure></div></details>
+  <details class="card"><summary>📊 Bảng độ giống (2 kịch bản) + biểu đồ (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Kịch bản A — “See you next time.” (ngắn)</th><th>Kịch bản B — “Ladies and gentlemen, welcome.” (đúng thoại ref)</th></tr><tr><td>IndexTTS2</td><td>0.825</td><td>0.951</td></tr><tr><td>F5-TTS</td><td>0.801</td><td>0.876</td></tr><tr><td>Chatterbox</td><td>0.699</td><td>0.873</td></tr><tr><td>StyleTTS2</td><td>0.751</td><td>0.797</td></tr><tr><td>Kokoro</td><td>0.482</td><td>0.517</td></tr></table><div class="note">Độ giống = cosine với clip ref neil (0–1). Câu dài & trùng nội dung ref (B) cho số ổn định và cao hơn câu ngắn (A).</div><figure><img src="img/similarity_refline_chart.png" alt="Độ giống giọng ref neil — kịch bản B (đọc cùng câu). Trục dọc: cosine (0–1)."/>
+      <figcaption>Độ giống giọng ref neil — kịch bản B (đọc cùng câu). Trục dọc: cosine (0–1).</figcaption></figure><figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ."/>
+      <figcaption>Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure></div></details>
 
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   <details class="card"><summary>📊 Biểu đồ đánh đổi &amp; thời gian tạo (bấm để mở)</summary><div class="dbody"><figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng."/>
