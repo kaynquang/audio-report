@@ -86,6 +86,28 @@ def rows(data, fmt):
     return "\n".join(f"<tr><td>{html.escape(n)}</td><td>{fmt(v)}</td></tr>" for n, v in data)
 
 
+def details(title, inner):
+    return (f'<details class="card"><summary>{html.escape(title)}</summary>'
+            f'<div class="dbody">{inner}</div></details>')
+
+
+# nội dung gập sẵn cho từng mục
+imgs1 = (img("compare_waveforms.png", "Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu.")
+         + img("compare_pitch.png", "Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc.")
+         + img("compare_scripts_waveforms.png", "Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2."))
+
+nat_block = ('<div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div>'
+             f'<table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>'
+             + img("compare_to_original.png", "Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật."))
+
+clone_block = (f'<table><tr><th>Engine</th><th>Độ giống giọng ref (cosine 0–1)</th></tr>{rows(clone, lambda v: f"{v:.3f}")}</table>'
+               + img("similarity_refline_chart.png", "Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống.")
+               + img("compare_refline_waveforms.png", "Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ."))
+
+synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng.")
+               + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
+
+
 HTML = f"""<!doctype html>
 <html lang="vi"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -110,6 +132,11 @@ HTML = f"""<!doctype html>
   figure {{ margin:14px 0; }}
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
   figcaption {{ color:var(--mut); font-size:13px; margin-top:6px; }}
+  details.card > summary {{ cursor:pointer; font-weight:600; list-style:none; user-select:none; }}
+  details.card > summary::-webkit-details-marker {{ display:none; }}
+  details.card > summary::before {{ content:"▸ "; color:var(--acc); font-weight:700; }}
+  details.card[open] > summary::before {{ content:"▾ "; }}
+  details.card > .dbody {{ margin-top:14px; }}
   a {{ color:var(--acc); }}
   .pill {{ display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }}
@@ -144,22 +171,10 @@ HTML = f"""<!doctype html>
       {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
     </table>
   </div>
-  <div class="card">
-    <div class="sub">Biểu đồ của mục này:</div>
-    {img("compare_waveforms.png","Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu.")}
-    {img("compare_pitch.png","Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc.")}
-    {img("compare_scripts_waveforms.png","Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.")}
-  </div>
+  {details("📊 Biểu đồ — sóng & cao độ (bấm để mở)", imgs1)}
 
   <h2>2) Độ tự nhiên — so với giọng người thật</h2>
-  <div class="card">
-    <div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div>
-    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>
-  </div>
-  <div class="card">
-    <div class="sub">Biểu đồ của mục này:</div>
-    {img("compare_to_original.png","Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật ở chỉ số đó.")}
-  </div>
+  {details("📊 Số liệu & biểu đồ độ tự nhiên (bấm để mở)", nat_block)}
 
   <h2>3) Clone giọng — đọc đúng thoại clip ref</h2>
   <div class="card">
@@ -168,22 +183,11 @@ HTML = f"""<!doctype html>
       {audio_row("⭐ Clip ref (neil)", "ref_neil.wav", "giọng gốc cần clone")}
       {''.join(audio_row(LABEL[e], f"rl_{e}.wav") for e in ENG)}
     </table>
-    <table>
-      <tr><th>Engine</th><th>Độ giống giọng ref (cosine 0–1)</th></tr>
-      {rows(clone, lambda v: f"{v:.3f}")}
-    </table>
   </div>
-  <div class="card">
-    <div class="sub">Biểu đồ của mục này:</div>
-    {img("similarity_refline_chart.png","Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống. Mỗi cột một engine.")}
-    {img("compare_refline_waveforms.png","Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian (giây); trục dọc: biên độ.")}
-  </div>
+  {details("📊 Bảng độ giống + biểu đồ (bấm để mở)", clone_block)}
 
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
-  <div class="card">
-    {img("tradeoff_scatter.png","Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng (vừa giống vừa tự nhiên).")}
-    <table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>
-  </div>
+  {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
   <h2>5) Báo cáo PDF đầy đủ</h2>
   <div class="card">
