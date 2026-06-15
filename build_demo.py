@@ -21,6 +21,15 @@ ENG = ["kokoro", "chatterbox", "f5", "styletts2", "index"]
 LABEL = {"kokoro": "Kokoro", "chatterbox": "Chatterbox", "f5": "F5-TTS",
          "styletts2": "StyleTTS2", "index": "IndexTTS2"}
 
+
+def _read(name):
+    p = os.path.join(ROOT, "scripts", name)
+    return open(p, encoding="utf-8").read().strip() if os.path.exists(p) else ""
+
+
+SCRIPT1 = _read("voice_consistency_test.txt")
+SCRIPT2 = _read("voice_similarity_test.txt")
+
 # ---- copy audio ----
 cp("refs/original_voice.wav", "s1_original.wav", "audio")
 for e in ENG:
@@ -94,6 +103,8 @@ def details(title, inner):
 # nội dung gập sẵn cho từng mục
 imgs1 = (img("compare_waveforms.png", "Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu.")
          + img("compare_pitch.png", "Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc.")
+         + '<div class="sub">Kịch bản 2 (dùng cho biểu đồ so sánh 2 kịch bản bên dưới):</div>'
+         + f'<pre class="script">{html.escape(SCRIPT2)}</pre>'
          + img("compare_scripts_waveforms.png", "Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2."))
 
 nat_block = ('<div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div>'
@@ -141,14 +152,15 @@ HTML = f"""<!doctype html>
   .pill {{ display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }}
   code {{ background:#eef1f5; padding:1px 6px; border-radius:5px; }}
+  pre.script {{ background:#f3f5f8; border:1px solid var(--line); border-radius:8px;
+    padding:10px 13px; font-size:13px; line-height:1.55; white-space:pre-wrap;
+    margin:8px 0; color:#2a2f36; font-family:Menlo,Consolas,monospace; }}
   .grid2 {{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }}
   @media (max-width:720px) {{ .grid2 {{ grid-template-columns:1fr; }} audio {{ width:100%; }} td.lbl{{width:auto;}} }}
 </style></head>
 <body>
 <header>
   <h1>🎙️ Athena TTS — Demo so sánh 5 engine TTS mã nguồn mở</h1>
-  <div class="sub">Kokoro · Chatterbox · F5-TTS · StyleTTS2 · IndexTTS2 — chạy trên CPU (Apple M4 Pro).
-  Mở file này bằng trình duyệt để nghe & xem trực tiếp.</div>
 </header>
 <main>
 
@@ -165,7 +177,8 @@ HTML = f"""<!doctype html>
 
   <h2>1) Nghe thử — kịch bản dài: giọng gốc (người) vs 5 engine</h2>
   <div class="card">
-    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>). Nghe để cảm nhận tổng thể trước.</div>
+    <div class="sub">Kịch bản 1 (clone từ <code>refs/speaker.wav</code>) — nghe để cảm nhận tổng thể:</div>
+    <pre class="script">{html.escape(SCRIPT1)}</pre>
     <table>
       {audio_row("⭐ Giọng gốc (người)", "s1_original.wav", "ground truth")}
       {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
