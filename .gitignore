@@ -29,3 +29,6 @@ analysis/_timing_out/
 # local config & build artifacts
 .claude/
 *.egg-info/
+
+# cho phép video demo (Knowlify) bất chấp *.mp4
+!demo/video/*.mp4

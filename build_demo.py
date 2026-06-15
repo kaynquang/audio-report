@@ -5,7 +5,7 @@ import os, shutil, html
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 D = os.path.join(ROOT, "demo")
-for sub in ("audio", "img", "pdf"):
+for sub in ("audio", "img", "pdf", "video"):
     os.makedirs(os.path.join(D, sub), exist_ok=True)
 
 
@@ -42,6 +42,9 @@ for e in ENG:
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
+# dịch vụ thương mại (closed-source)
+cp("non-open/humeai.wav", "humeai.wav", "audio")
+cp("non-open/knowlify.mp4", "knowlify.mp4", "video")
 
 # ---- copy images ----
 IMGS = ["compare_waveforms.png", "compare_pitch.png", "compare_to_original.png",
@@ -151,6 +154,7 @@ HTML = f"""<!doctype html>
   td.lbl {{ width:190px; font-weight:600; }}
   td.note {{ color:var(--mut); font-size:13px; }}
   audio {{ width:320px; height:34px; }}
+  video {{ width:100%; max-width:640px; border-radius:10px; border:1px solid var(--line); display:block; }}
   figure {{ margin:14px 0; }}
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
   figcaption {{ color:var(--mut); font-size:13px; margin-top:6px; }}
@@ -221,7 +225,26 @@ HTML = f"""<!doctype html>
     </table>
   </div>
 
-  <h2>6) Báo cáo PDF đầy đủ</h2>
+  <h2>6) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <div class="card">
+    <div class="sub">Ngoài 5 engine mã nguồn mở, đây là 2 dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
+    <table>
+      {audio_row("HumeAI — Octave 2 (audio)", "humeai.wav", "TTS biểu cảm, có API")}
+    </table>
+    <div class="sub" style="margin-top:12px"><b>Knowlify</b> — không chỉ giọng mà tạo cả <b>VIDEO explainer</b> từ text/tài liệu:</div>
+    <video controls preload="none" src="video/knowlify.mp4"></video>
+    <table style="margin-top:14px">
+      <tr><th>Dịch vụ</th><th>Sản phẩm</th><th>Giá tham khảo</th></tr>
+      <tr><td><b>HumeAI</b> (Octave 2)</td><td>Audio (TTS, có cảm xúc)</td><td>~$7.60 / 1 triệu ký tự (API) · free 10k ký tự/tháng · ~½ giá ElevenLabs</td></tr>
+      <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
+    </table>
+    <div class="note">Giá tham khảo (6/2026) — kiểm tra lại trên trang chính thức:
+      <a href="https://www.hume.ai/pricing" target="_blank">hume.ai/pricing</a> ·
+      <a href="https://knowlify.com" target="_blank">knowlify.com</a>.
+      Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
+  </div>
+
+  <h2>7) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
