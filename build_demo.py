@@ -68,6 +68,18 @@ clone = [("IndexTTS2", 0.951), ("F5-TTS", 0.876), ("Chatterbox", 0.873),
          ("StyleTTS2", 0.797), ("Kokoro (không clone)", 0.517)]
 timing = [("Kokoro", 12.7), ("StyleTTS2", 29.5), ("Chatterbox", 38.0),
           ("IndexTTS2", 68.8), ("F5-TTS", 253.7)]
+# (engine, cơ chế, dung lượng model, github repo "owner/name")
+OVERVIEW = [
+    ("Kokoro",     "non-autoregressive 82M · không clone", "~313 MB", "hexgrad/kokoro"),
+    ("Chatterbox", "LM tự hồi quy (Llama 0.5B)",           "~3.0 GB", "resemble-ai/chatterbox"),
+    ("F5-TTS",     "flow-matching (DiT)",                   "~1.3 GB", "SWivid/F5-TTS"),
+    ("StyleTTS2",  "style diffusion + GAN",                 "~870 MB", "yl4579/StyleTTS2"),
+    ("IndexTTS2",  "GPT tự hồi quy + cảm xúc",              "~11 GB",  "index-tts/index-tts"),
+]
+overview_rows = "\n".join(
+    f'<tr><td class="lbl">{e}</td><td>{html.escape(m)}</td><td>{sz}</td>'
+    f'<td><a href="https://github.com/{r}" target="_blank">{r}</a></td></tr>'
+    for e, m, sz, r in OVERVIEW)
 
 
 def rows(data, fmt):
@@ -114,15 +126,14 @@ HTML = f"""<!doctype html>
 <main>
 
   <div class="card">
-    <b>Đang làm gì?</b> Thử nghiệm 5 engine TTS mã nguồn mở để: (1) đánh giá chất lượng/độ tự nhiên,
-    (2) khả năng <b>nhân bản giọng</b> (voice cloning) từ một clip mẫu, (3) tốc độ tạo.
-    <div style="margin-top:8px">
-      <span class="pill">Kokoro · nhanh, nhẹ, không clone</span>
-      <span class="pill">Chatterbox · LM tự hồi quy</span>
-      <span class="pill">F5-TTS · flow-matching</span>
-      <span class="pill">StyleTTS2 · style diffusion</span>
-      <span class="pill">IndexTTS2 · GPT + cảm xúc</span>
-    </div>
+    <b>Overview</b> — Thử nghiệm 5 engine TTS mã nguồn mở: đánh giá (1) độ tự nhiên,
+    (2) khả năng <b>nhân bản giọng</b> từ clip mẫu, (3) tốc độ tạo. Bảng dưới: cơ chế,
+    dung lượng model (tải về), và link tới repo gốc của từng engine.
+    <table>
+      <tr><th>Engine</th><th>Cơ chế</th><th>Dung lượng model</th><th>Repo gốc (GitHub)</th></tr>
+      {overview_rows}
+    </table>
+    <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
   <h2>1) Nghe thử — kịch bản dài: giọng gốc (người) vs 5 engine</h2>

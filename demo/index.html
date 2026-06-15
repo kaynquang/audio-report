@@ -38,15 +38,18 @@
 <main>
 
   <div class="card">
-    <b>Đang làm gì?</b> Thử nghiệm 5 engine TTS mã nguồn mở để: (1) đánh giá chất lượng/độ tự nhiên,
-    (2) khả năng <b>nhân bản giọng</b> (voice cloning) từ một clip mẫu, (3) tốc độ tạo.
-    <div style="margin-top:8px">
-      <span class="pill">Kokoro · nhanh, nhẹ, không clone</span>
-      <span class="pill">Chatterbox · LM tự hồi quy</span>
-      <span class="pill">F5-TTS · flow-matching</span>
-      <span class="pill">StyleTTS2 · style diffusion</span>
-      <span class="pill">IndexTTS2 · GPT + cảm xúc</span>
-    </div>
+    <b>Overview</b> — Thử nghiệm 5 engine TTS mã nguồn mở: đánh giá (1) độ tự nhiên,
+    (2) khả năng <b>nhân bản giọng</b> từ clip mẫu, (3) tốc độ tạo. Bảng dưới: cơ chế,
+    dung lượng model (tải về), và link tới repo gốc của từng engine.
+    <table>
+      <tr><th>Engine</th><th>Cơ chế</th><th>Dung lượng model</th><th>Repo gốc (GitHub)</th></tr>
+      <tr><td class="lbl">Kokoro</td><td>non-autoregressive 82M · không clone</td><td>~313 MB</td><td><a href="https://github.com/hexgrad/kokoro" target="_blank">hexgrad/kokoro</a></td></tr>
+<tr><td class="lbl">Chatterbox</td><td>LM tự hồi quy (Llama 0.5B)</td><td>~3.0 GB</td><td><a href="https://github.com/resemble-ai/chatterbox" target="_blank">resemble-ai/chatterbox</a></td></tr>
+<tr><td class="lbl">F5-TTS</td><td>flow-matching (DiT)</td><td>~1.3 GB</td><td><a href="https://github.com/SWivid/F5-TTS" target="_blank">SWivid/F5-TTS</a></td></tr>
+<tr><td class="lbl">StyleTTS2</td><td>style diffusion + GAN</td><td>~870 MB</td><td><a href="https://github.com/yl4579/StyleTTS2" target="_blank">yl4579/StyleTTS2</a></td></tr>
+<tr><td class="lbl">IndexTTS2</td><td>GPT tự hồi quy + cảm xúc</td><td>~11 GB</td><td><a href="https://github.com/index-tts/index-tts" target="_blank">index-tts/index-tts</a></td></tr>
+    </table>
+    <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
   <h2>1) Nghe thử — kịch bản dài: giọng gốc (người) vs 5 engine</h2>
