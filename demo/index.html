@@ -49,9 +49,9 @@
     </div>
   </div>
 
-  <h2>1) Kịch bản dài — giọng gốc (người) vs 5 engine</h2>
+  <h2>1) Nghe thử — kịch bản dài: giọng gốc (người) vs 5 engine</h2>
   <div class="card">
-    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>).</div>
+    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>). Nghe để cảm nhận tổng thể trước.</div>
     <table>
       <tr><td class="lbl">⭐ Giọng gốc (người)</td>
       <td><audio controls preload="none" src="audio/s1_original.wav"></audio></td>
@@ -69,11 +69,35 @@
       <td class="note"></td></tr>
     </table>
   </div>
-
-  <h2>2) Clone giọng voiceover — nói đúng thoại clip ref</h2>
   <div class="card">
-    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>;
-    cả 5 engine đọc đúng câu này.</div>
+    <div class="sub">Biểu đồ của mục này:</div>
+    <figure><img src="img/compare_waveforms.png" alt="Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu."/>
+      <figcaption>Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu.</figcaption></figure>
+    <figure><img src="img/compare_pitch.png" alt="Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc."/>
+      <figcaption>Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc.</figcaption></figure>
+    <figure><img src="img/compare_scripts_waveforms.png" alt="Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2."/>
+      <figcaption>Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.</figcaption></figure>
+  </div>
+
+  <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <div class="card">
+    <div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div>
+    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>StyleTTS2</td><td>89.6</td></tr>
+<tr><td>IndexTTS2</td><td>89.5</td></tr>
+<tr><td>Kokoro</td><td>80.9</td></tr>
+<tr><td>Chatterbox</td><td>78.4</td></tr>
+<tr><td>Giọng gốc (người)</td><td>51.7</td></tr>
+<tr><td>F5-TTS</td><td>35.4</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="sub">Biểu đồ của mục này:</div>
+    <figure><img src="img/compare_to_original.png" alt="Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật ở chỉ số đó."/>
+      <figcaption>Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật ở chỉ số đó.</figcaption></figure>
+  </div>
+
+  <h2>3) Clone giọng — đọc đúng thoại clip ref</h2>
+  <div class="card">
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>; cả 5 engine đọc đúng câu này để so độ giống giọng.</div>
     <table>
       <tr><td class="lbl">⭐ Clip ref (neil)</td>
       <td><audio controls preload="none" src="audio/ref_neil.wav"></audio></td>
@@ -91,7 +115,7 @@
       <td class="note"></td></tr>
     </table>
     <table>
-      <tr><th>Engine</th><th>Độ giống giọng ref (cosine)</th></tr>
+      <tr><th>Engine</th><th>Độ giống giọng ref (cosine 0–1)</th></tr>
       <tr><td>IndexTTS2</td><td>0.951</td></tr>
 <tr><td>F5-TTS</td><td>0.876</td></tr>
 <tr><td>Chatterbox</td><td>0.873</td></tr>
@@ -99,36 +123,23 @@
 <tr><td>Kokoro (không clone)</td><td>0.517</td></tr>
     </table>
   </div>
+  <div class="card">
+    <div class="sub">Biểu đồ của mục này:</div>
+    <figure><img src="img/similarity_refline_chart.png" alt="Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống. Mỗi cột một engine."/>
+      <figcaption>Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống. Mỗi cột một engine.</figcaption></figure>
+    <figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian (giây); trục dọc: biên độ."/>
+      <figcaption>Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian (giây); trục dọc: biên độ.</figcaption></figure>
+  </div>
 
-  <h2>3) Số liệu</h2>
-  <div class="card grid2">
-    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>StyleTTS2</td><td>89.6</td></tr>
-<tr><td>IndexTTS2</td><td>89.5</td></tr>
-<tr><td>Kokoro</td><td>80.9</td></tr>
-<tr><td>Chatterbox</td><td>78.4</td></tr>
-<tr><td>Giọng gốc (người)</td><td>51.7</td></tr>
-<tr><td>F5-TTS</td><td>35.4</td></tr></table>
-    <table><tr><th>Engine</th><th>Thời gian tạo (s)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
+  <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
+  <div class="card">
+    <figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng (vừa giống vừa tự nhiên)."/>
+      <figcaption>Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng (vừa giống vừa tự nhiên).</figcaption></figure>
+    <table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
 <tr><td>StyleTTS2</td><td>29.5</td></tr>
 <tr><td>Chatterbox</td><td>38.0</td></tr>
 <tr><td>IndexTTS2</td><td>68.8</td></tr>
 <tr><td>F5-TTS</td><td>253.7</td></tr></table>
-  </div>
-
-  <h2>4) Biểu đồ</h2>
-  <div class="card">
-    <figure><img src="img/compare_to_original.png" alt="Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số."/>
-      <figcaption>Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số.</figcaption></figure>
-    <figure><img src="img/tradeoff_scatter.png" alt="Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên."/>
-      <figcaption>Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên.</figcaption></figure>
-    <figure><img src="img/similarity_refline_chart.png" alt="Độ giống giọng ref (neil) khi đọc cùng câu. Trục dọc: cosine 0–1."/>
-      <figcaption>Độ giống giọng ref (neil) khi đọc cùng câu. Trục dọc: cosine 0–1.</figcaption></figure>
-    <figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref (đen) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ."/>
-      <figcaption>Sóng: clip ref (đen) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure>
-    <figure><img src="img/compare_waveforms.png" alt="Sóng 5 engine + giọng gốc (kịch bản 1)."/>
-      <figcaption>Sóng 5 engine + giọng gốc (kịch bản 1).</figcaption></figure>
-    <figure><img src="img/compare_pitch.png" alt="Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz."/>
-      <figcaption>Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz.</figcaption></figure>
   </div>
 
   <h2>5) Báo cáo PDF đầy đủ</h2>

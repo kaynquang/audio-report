@@ -31,7 +31,7 @@ for e in ENG:
 
 # ---- copy images ----
 IMGS = ["compare_waveforms.png", "compare_pitch.png", "compare_to_original.png",
-        "similarity_chart.png", "tradeoff_scatter.png", "similarity_refline_chart.png",
+        "tradeoff_scatter.png", "similarity_refline_chart.png",
         "compare_refline_waveforms.png", "compare_scripts_waveforms.png"]
 for im in IMGS:
     cp(f"analysis/{im}", im, "img")
@@ -125,43 +125,53 @@ HTML = f"""<!doctype html>
     </div>
   </div>
 
-  <h2>1) Kịch bản dài — giọng gốc (người) vs 5 engine</h2>
+  <h2>1) Nghe thử — kịch bản dài: giọng gốc (người) vs 5 engine</h2>
   <div class="card">
-    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>).</div>
+    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>). Nghe để cảm nhận tổng thể trước.</div>
     <table>
       {audio_row("⭐ Giọng gốc (người)", "s1_original.wav", "ground truth")}
       {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
     </table>
   </div>
-
-  <h2>2) Clone giọng voiceover — nói đúng thoại clip ref</h2>
   <div class="card">
-    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>;
-    cả 5 engine đọc đúng câu này.</div>
+    <div class="sub">Biểu đồ của mục này:</div>
+    {img("compare_waveforms.png","Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu.")}
+    {img("compare_pitch.png","Cao độ F0 theo thời gian. Trục ngang: thời gian (giây); trục dọc: cao độ (Hz). Màu đen = giọng gốc.")}
+    {img("compare_scripts_waveforms.png","Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.")}
+  </div>
+
+  <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <div class="card">
+    <div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div>
+    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>
+  </div>
+  <div class="card">
+    <div class="sub">Biểu đồ của mục này:</div>
+    {img("compare_to_original.png","Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật ở chỉ số đó.")}
+  </div>
+
+  <h2>3) Clone giọng — đọc đúng thoại clip ref</h2>
+  <div class="card">
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>; cả 5 engine đọc đúng câu này để so độ giống giọng.</div>
     <table>
       {audio_row("⭐ Clip ref (neil)", "ref_neil.wav", "giọng gốc cần clone")}
       {''.join(audio_row(LABEL[e], f"rl_{e}.wav") for e in ENG)}
     </table>
     <table>
-      <tr><th>Engine</th><th>Độ giống giọng ref (cosine)</th></tr>
+      <tr><th>Engine</th><th>Độ giống giọng ref (cosine 0–1)</th></tr>
       {rows(clone, lambda v: f"{v:.3f}")}
     </table>
   </div>
-
-  <h2>3) Số liệu</h2>
-  <div class="card grid2">
-    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>
-    <table><tr><th>Engine</th><th>Thời gian tạo (s)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>
+  <div class="card">
+    <div class="sub">Biểu đồ của mục này:</div>
+    {img("similarity_refline_chart.png","Độ giống giọng ref neil khi đọc cùng câu. Trục dọc: cosine (0–1), càng cao càng giống. Mỗi cột một engine.")}
+    {img("compare_refline_waveforms.png","Sóng: clip ref neil (đen, hàng trên) vs 5 engine cùng câu. Trục ngang: thời gian (giây); trục dọc: biên độ.")}
   </div>
 
-  <h2>4) Biểu đồ</h2>
+  <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   <div class="card">
-    {img("compare_to_original.png","Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số.")}
-    {img("tradeoff_scatter.png","Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên.")}
-    {img("similarity_refline_chart.png","Độ giống giọng ref (neil) khi đọc cùng câu. Trục dọc: cosine 0–1.")}
-    {img("compare_refline_waveforms.png","Sóng: clip ref (đen) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ.")}
-    {img("compare_waveforms.png","Sóng 5 engine + giọng gốc (kịch bản 1).")}
-    {img("compare_pitch.png","Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz.")}
+    {img("tradeoff_scatter.png","Mỗi điểm là một engine. Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên. Góc trên-phải là lý tưởng (vừa giống vừa tự nhiên).")}
+    <table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>
   </div>
 
   <h2>5) Báo cáo PDF đầy đủ</h2>
