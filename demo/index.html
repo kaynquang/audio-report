@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Athena TTS — Demo</title>
+<style>
+  :root { --bg:#0f1115; --card:#181b22; --fg:#e6e8eb; --mut:#9aa3af; --acc:#6ea8fe; --line:#262b35; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { padding:32px 24px; background:linear-gradient(135deg,#1b2030,#11141b); border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 6px; font-size:26px; }
+  h2 { margin:34px 0 12px; font-size:20px; border-left:3px solid var(--acc); padding-left:10px; }
+  .sub { color:var(--mut); }
+  main { max-width:1000px; margin:0 auto; padding:0 24px 60px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; }
+  table { width:100%; border-collapse:collapse; margin:8px 0; }
+  td,th { padding:7px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+  th { color:var(--mut); font-weight:600; }
+  td.lbl { width:190px; font-weight:600; }
+  td.note { color:var(--mut); font-size:13px; }
+  audio { width:320px; height:34px; }
+  figure { margin:14px 0; }
+  img { width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }
+  figcaption { color:var(--mut); font-size:13px; margin-top:6px; }
+  a { color:var(--acc); }
+  .pill { display:inline-block; background:#222836; color:var(--acc); border:1px solid var(--line);
+    border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }
+  code { background:#222836; padding:1px 6px; border-radius:5px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:720px) { .grid2 { grid-template-columns:1fr; } audio { width:100%; } td.lbl{width:auto;} }
+</style></head>
+<body>
+<header>
+  <h1>🎙️ Athena TTS — Demo so sánh 5 engine TTS mã nguồn mở</h1>
+  <div class="sub">Kokoro · Chatterbox · F5-TTS · StyleTTS2 · IndexTTS2 — chạy trên CPU (Apple M4 Pro).
+  Mở file này bằng trình duyệt để nghe & xem trực tiếp.</div>
+</header>
+<main>
+
+  <div class="card">
+    <b>Đang làm gì?</b> Thử nghiệm 5 engine TTS mã nguồn mở để: (1) đánh giá chất lượng/độ tự nhiên,
+    (2) khả năng <b>nhân bản giọng</b> (voice cloning) từ một clip mẫu, (3) tốc độ tạo.
+    <div style="margin-top:8px">
+      <span class="pill">Kokoro · nhanh, nhẹ, không clone</span>
+      <span class="pill">Chatterbox · LM tự hồi quy</span>
+      <span class="pill">F5-TTS · flow-matching</span>
+      <span class="pill">StyleTTS2 · style diffusion</span>
+      <span class="pill">IndexTTS2 · GPT + cảm xúc</span>
+    </div>
+  </div>
+
+  <h2>1) Kịch bản dài — giọng gốc (người) vs 5 engine</h2>
+  <div class="card">
+    <div class="sub">Câu: <code>Hello, this is a short voice consistency test…</code> (clone từ <code>refs/speaker.wav</code>).</div>
+    <table>
+      <tr><td class="lbl">⭐ Giọng gốc (người)</td>
+      <td><audio controls preload="none" src="audio/s1_original.wav"></audio></td>
+      <td class="note">ground truth</td></tr>
+      <tr><td class="lbl">Kokoro</td>
+      <td><audio controls preload="none" src="audio/s1_kokoro.wav"></audio></td>
+      <td class="note">giọng cài sẵn (không clone)</td></tr><tr><td class="lbl">Chatterbox</td>
+      <td><audio controls preload="none" src="audio/s1_chatterbox.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">F5-TTS</td>
+      <td><audio controls preload="none" src="audio/s1_f5.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2</td>
+      <td><audio controls preload="none" src="audio/s1_styletts2.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
+      <td><audio controls preload="none" src="audio/s1_index.wav"></audio></td>
+      <td class="note"></td></tr>
+    </table>
+  </div>
+
+  <h2>2) Clone giọng voiceover — nói đúng thoại clip ref</h2>
+  <div class="card">
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — thoại: <code>“Ladies and gentlemen, welcome.”</code>;
+    cả 5 engine đọc đúng câu này.</div>
+    <table>
+      <tr><td class="lbl">⭐ Clip ref (neil)</td>
+      <td><audio controls preload="none" src="audio/ref_neil.wav"></audio></td>
+      <td class="note">giọng gốc cần clone</td></tr>
+      <tr><td class="lbl">Kokoro</td>
+      <td><audio controls preload="none" src="audio/rl_kokoro.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">Chatterbox</td>
+      <td><audio controls preload="none" src="audio/rl_chatterbox.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">F5-TTS</td>
+      <td><audio controls preload="none" src="audio/rl_f5.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2</td>
+      <td><audio controls preload="none" src="audio/rl_styletts2.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
+      <td><audio controls preload="none" src="audio/rl_index.wav"></audio></td>
+      <td class="note"></td></tr>
+    </table>
+    <table>
+      <tr><th>Engine</th><th>Độ giống giọng ref (cosine)</th></tr>
+      <tr><td>IndexTTS2</td><td>0.951</td></tr>
+<tr><td>F5-TTS</td><td>0.876</td></tr>
+<tr><td>Chatterbox</td><td>0.873</td></tr>
+<tr><td>StyleTTS2</td><td>0.797</td></tr>
+<tr><td>Kokoro (không clone)</td><td>0.517</td></tr>
+    </table>
+  </div>
+
+  <h2>3) Giọng bụng (xử lý hậu kỳ: hạ formant + cao độ + EQ trầm)</h2>
+  <div class="card">
+    <div class="grid2">
+      <table><tr><td class="lbl">StyleTTS2 — gốc</td>
+      <td><audio controls preload="none" src="audio/s1_styletts2.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2 — giọng bụng</td>
+      <td><audio controls preload="none" src="audio/belly_styletts2.wav"></audio></td>
+      <td class="note"></td></tr></table>
+      <table><tr><td class="lbl">IndexTTS2 — gốc</td>
+      <td><audio controls preload="none" src="audio/s1_index.wav"></audio></td>
+      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2 — giọng bụng</td>
+      <td><audio controls preload="none" src="audio/belly_index.wav"></audio></td>
+      <td class="note"></td></tr></table>
+    </div>
+  </div>
+
+  <h2>4) Số liệu</h2>
+  <div class="card grid2">
+    <table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>StyleTTS2</td><td>89.6</td></tr>
+<tr><td>IndexTTS2</td><td>89.5</td></tr>
+<tr><td>Kokoro</td><td>80.9</td></tr>
+<tr><td>Chatterbox</td><td>78.4</td></tr>
+<tr><td>Giọng gốc (người)</td><td>51.7</td></tr>
+<tr><td>F5-TTS</td><td>35.4</td></tr></table>
+    <table><tr><th>Engine</th><th>Thời gian tạo (s)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
+<tr><td>StyleTTS2</td><td>29.5</td></tr>
+<tr><td>Chatterbox</td><td>38.0</td></tr>
+<tr><td>IndexTTS2</td><td>68.8</td></tr>
+<tr><td>F5-TTS</td><td>253.7</td></tr></table>
+  </div>
+
+  <h2>5) Biểu đồ</h2>
+  <div class="card">
+    <figure><img src="img/compare_to_original.png" alt="Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số."/>
+      <figcaption>Chỉ số mỗi engine vs giọng gốc (đường đứt đen). Trục: giá trị chỉ số.</figcaption></figure>
+    <figure><img src="img/tradeoff_scatter.png" alt="Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên."/>
+      <figcaption>Trục ngang: độ giống giọng gốc; trục dọc: điểm tự nhiên.</figcaption></figure>
+    <figure><img src="img/similarity_refline_chart.png" alt="Độ giống giọng ref (neil) khi đọc cùng câu. Trục dọc: cosine 0–1."/>
+      <figcaption>Độ giống giọng ref (neil) khi đọc cùng câu. Trục dọc: cosine 0–1.</figcaption></figure>
+    <figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref (đen) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ."/>
+      <figcaption>Sóng: clip ref (đen) vs 5 engine cùng câu. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure>
+    <figure><img src="img/compare_waveforms.png" alt="Sóng 5 engine + giọng gốc (kịch bản 1)."/>
+      <figcaption>Sóng 5 engine + giọng gốc (kịch bản 1).</figcaption></figure>
+    <figure><img src="img/compare_pitch.png" alt="Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz."/>
+      <figcaption>Cao độ F0 (kịch bản 1). Trục ngang: thời gian; trục dọc: Hz.</figcaption></figure>
+  </div>
+
+  <h2>6) Báo cáo PDF đầy đủ</h2>
+  <div class="card">
+    <ul>
+      <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>
+    </ul>
+  </div>
+
+  <div class="sub" style="margin-top:30px">Tạo tự động bằng <code>build_demo.py</code>. Để gửi: zip cả thư mục <code>demo/</code>.</div>
+</main>
+</body></html>

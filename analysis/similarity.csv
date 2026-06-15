@@ -1,0 +1,7 @@
+engine,cosine_similarity_to_reference,clones_voice
+kokoro,0.8318,False
+chatterbox,0.9532,True
+f5,0.9687,True
+styletts2,0.9235,True
+index,0.9663,True
+[ceiling] speaker_full vs speaker,0.9829,same person

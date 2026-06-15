@@ -1,0 +1,6 @@
+rank,engine,cosine_to_neil,duration_s,clones
+1,index,0.951,3.6,True
+2,f5,0.876,4.0,True
+3,chatterbox,0.873,4.0,True
+4,styletts2,0.797,3.2,True
+-,kokoro,0.517,2.5,False

@@ -1,0 +1,30 @@
+# Python virtual envs (GBs)
+.venv/
+.venv-*/
+.venv_*/
+__pycache__/
+*.pyc
+
+# Cloned third-party repos + model checkpoints (14 GB)
+external/
+
+# Raw generated audio & references (demo/ holds curated copies)
+outputs/
+outputs2/
+outputs3/
+outputs4/
+outputs_belly/
+refs/
+
+# Source media & archives
+*.mp3
+*.mp4
+*.zip
+
+# transient
+analysis/_timing_out/
+.DS_Store
+
+# local config & build artifacts
+.claude/
+*.egg-info/
