@@ -44,9 +44,9 @@ for e in ENG:
     _s = os.path.join(ROOT, f"outputs5_srt/{e}.srt")
     if os.path.exists(_s):
         shutil.copy2(_s, os.path.join(D, "srt", f"{e}.srt"))
-for _src, _dst in [("base", "dur_base"), ("target_2.0s", "dur_2s"),
-                   ("target_3.0s", "dur_3s"), ("target_4.0s", "dur_4s")]:
-    cp(f"outputs_dur/{_src}.wav", f"{_dst}.wav", "audio")
+for e in ENG:
+    for s in ("base", "2s", "4s"):
+        cp(f"outputs_dur/{e}_{s}.wav", f"dur_{e}_{s}.wav", "audio")
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
@@ -149,14 +149,12 @@ _course_tbl = ('<table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp
                  'WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div>')
 
 _dur_rows = "".join(
-    f'<tr><td class="lbl">{lab}</td><td><audio controls preload="none" src="audio/{fn}"></audio></td>'
-    f'<td class="note">{note}</td></tr>'
-    for lab, fn, note in [("Gốc (tự nhiên)", "dur_base.wav", "≈ 3.15s"),
-                          ("Ép 2 giây", "dur_2s.wav", "thực tế 2.01s"),
-                          ("Ép 3 giây", "dur_3s.wav", "thực tế 3.01s"),
-                          ("Ép 4 giây", "dur_4s.wav", "thực tế 3.99s")])
+    f'<tr><td class="lbl">{LABEL[e]}</td>'
+    f'<td><audio controls preload="none" src="audio/dur_{e}_base.wav"></audio></td>'
+    f'<td><audio controls preload="none" src="audio/dur_{e}_2s.wav"></audio></td>'
+    f'<td><audio controls preload="none" src="audio/dur_{e}_4s.wav"></audio></td></tr>' for e in ENG)
 
-_DURCTRL = [("F5-TTS", "✅ Trực tiếp", "<code>--fix_duration</code> (ép tổng giây) + <code>--speed</code>"),
+_DURCTRL = [("F5-TTS", "🟡 Có (tricky)", "<code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code>"),
             ("Kokoro", "🟡 Qua tốc độ", "tham số <code>speed</code> (hệ số tempo)"),
             ("StyleTTS2", "🟡 Qua tốc độ", "scale bộ dự đoán thời lượng (cần code)"),
             ("IndexTTS2", "🟡 Nâng cao", "model hỗ trợ duration-control; API cơ bản tự canh"),
@@ -229,6 +227,8 @@ HTML = f"""<!doctype html>
   td.lbl {{ width:190px; font-weight:600; }}
   td.note {{ color:var(--mut); font-size:13px; }}
   audio {{ width:320px; height:34px; }}
+  .durtbl audio {{ width:200px; }}
+  .durtbl td, .durtbl th {{ font-size:13px; }}
   video {{ width:100%; max-width:640px; border-radius:10px; border:1px solid var(--line); display:block; }}
   figure {{ margin:14px 0; }}
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
@@ -312,8 +312,11 @@ HTML = f"""<!doctype html>
 
   <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
   <div class="card">
-    <div class="sub">Cùng một câu, ép thành đúng 2 / 3 / 4 giây (giữ cao độ):</div>
-    <table>{_dur_rows}</table>
+    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép đúng 2 giây / 4 giây</b> (giữ cao độ). Nghe để thấy có thể đặt thời lượng tuỳ ý cho từng model.</div>
+    <table class="durtbl">
+      <tr><th>Engine</th><th>Gốc (tự nhiên)</th><th>Ép 2 giây</th><th>Ép 4 giây</th></tr>
+      {_dur_rows}
+    </table>
   </div>
   {details("📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)", _durctrl_tbl)}
 

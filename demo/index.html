@@ -19,6 +19,8 @@
   td.lbl { width:190px; font-weight:600; }
   td.note { color:var(--mut); font-size:13px; }
   audio { width:320px; height:34px; }
+  .durtbl audio { width:200px; }
+  .durtbl td, .durtbl th { font-size:13px; }
   video { width:100%; max-width:640px; border-radius:10px; border:1px solid var(--line); display:block; }
   figure { margin:14px 0; }
   img { width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }
@@ -169,10 +171,13 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 
   <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
   <div class="card">
-    <div class="sub">Cùng một câu, ép thành đúng 2 / 3 / 4 giây (giữ cao độ):</div>
-    <table><tr><td class="lbl">Gốc (tự nhiên)</td><td><audio controls preload="none" src="audio/dur_base.wav"></audio></td><td class="note">≈ 3.15s</td></tr><tr><td class="lbl">Ép 2 giây</td><td><audio controls preload="none" src="audio/dur_2s.wav"></audio></td><td class="note">thực tế 2.01s</td></tr><tr><td class="lbl">Ép 3 giây</td><td><audio controls preload="none" src="audio/dur_3s.wav"></audio></td><td class="note">thực tế 3.01s</td></tr><tr><td class="lbl">Ép 4 giây</td><td><audio controls preload="none" src="audio/dur_4s.wav"></audio></td><td class="note">thực tế 3.99s</td></tr></table>
+    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép đúng 2 giây / 4 giây</b> (giữ cao độ). Nghe để thấy có thể đặt thời lượng tuỳ ý cho từng model.</div>
+    <table class="durtbl">
+      <tr><th>Engine</th><th>Gốc (tự nhiên)</th><th>Ép 2 giây</th><th>Ép 4 giây</th></tr>
+      <tr><td class="lbl">Kokoro</td><td><audio controls preload="none" src="audio/dur_kokoro_base.wav"></audio></td><td><audio controls preload="none" src="audio/dur_kokoro_2s.wav"></audio></td><td><audio controls preload="none" src="audio/dur_kokoro_4s.wav"></audio></td></tr><tr><td class="lbl">Chatterbox</td><td><audio controls preload="none" src="audio/dur_chatterbox_base.wav"></audio></td><td><audio controls preload="none" src="audio/dur_chatterbox_2s.wav"></audio></td><td><audio controls preload="none" src="audio/dur_chatterbox_4s.wav"></audio></td></tr><tr><td class="lbl">F5-TTS</td><td><audio controls preload="none" src="audio/dur_f5_base.wav"></audio></td><td><audio controls preload="none" src="audio/dur_f5_2s.wav"></audio></td><td><audio controls preload="none" src="audio/dur_f5_4s.wav"></audio></td></tr><tr><td class="lbl">StyleTTS2</td><td><audio controls preload="none" src="audio/dur_styletts2_base.wav"></audio></td><td><audio controls preload="none" src="audio/dur_styletts2_2s.wav"></audio></td><td><audio controls preload="none" src="audio/dur_styletts2_4s.wav"></audio></td></tr><tr><td class="lbl">IndexTTS2</td><td><audio controls preload="none" src="audio/dur_index_base.wav"></audio></td><td><audio controls preload="none" src="audio/dur_index_2s.wav"></audio></td><td><audio controls preload="none" src="audio/dur_index_4s.wav"></audio></td></tr>
+    </table>
   </div>
-  <details class="card"><summary>📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Điều khiển thời lượng?</th><th>Cách</th></tr><tr><td class='lbl'>F5-TTS</td><td>✅ Trực tiếp</td><td><code>--fix_duration</code> (ép tổng giây) + <code>--speed</code></td></tr><tr><td class='lbl'>Kokoro</td><td>🟡 Qua tốc độ</td><td>tham số <code>speed</code> (hệ số tempo)</td></tr><tr><td class='lbl'>StyleTTS2</td><td>🟡 Qua tốc độ</td><td>scale bộ dự đoán thời lượng (cần code)</td></tr><tr><td class='lbl'>IndexTTS2</td><td>🟡 Nâng cao</td><td>model hỗ trợ duration-control; API cơ bản tự canh</td></tr><tr><td class='lbl'>Chatterbox</td><td>❌ Tự canh</td><td>không có tham số thời lượng</td></tr></table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) → ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div></div></details>
+  <details class="card"><summary>📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Điều khiển thời lượng?</th><th>Cách</th></tr><tr><td class='lbl'>F5-TTS</td><td>🟡 Có (tricky)</td><td><code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code></td></tr><tr><td class='lbl'>Kokoro</td><td>🟡 Qua tốc độ</td><td>tham số <code>speed</code> (hệ số tempo)</td></tr><tr><td class='lbl'>StyleTTS2</td><td>🟡 Qua tốc độ</td><td>scale bộ dự đoán thời lượng (cần code)</td></tr><tr><td class='lbl'>IndexTTS2</td><td>🟡 Nâng cao</td><td>model hỗ trợ duration-control; API cơ bản tự canh</td></tr><tr><td class='lbl'>Chatterbox</td><td>❌ Tự canh</td><td>không có tham số thời lượng</td></tr></table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) → ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div></div></details>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="card">
