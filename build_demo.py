@@ -205,7 +205,7 @@ def parse_srt(path):
 
 CUES = {e: parse_srt(os.path.join(D, "srt", f"{e}.srt")) for e in ENG_ALL}
 _kopts = "".join(f'<option value="{e}">{LABEL[e]}</option>' for e in ENG_ALL)
-_ksrt = " · ".join(f'<a href="srt/{e}.srt" download>{e}.srt</a>' for e in ENG)
+_ksrt = " · ".join(f'<a href="srt/{e}.srt" download>{e}.srt</a>' for e in ENG_ALL)
 _KJS_BODY = """
 (function(){
   var sel=document.getElementById('ksel'),aud=document.getElementById('kaud'),box=document.getElementById('kbox');
