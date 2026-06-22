@@ -57,6 +57,10 @@ for _src, _dst in [("multi_kokoro_sp1.3", "multi_sp13"), ("multi_kokoro_sp1.0", 
                    ("multi_kokoro_sp0.8", "multi_sp08"), ("multi_total_10s", "multi_total_10s"),
                    ("multi_total_12s", "multi_total_12s"), ("multi_total_20s", "multi_total_20s")]:
     cp(f"outputs_dur/{_src}.wav", f"{_dst}.wav", "audio")
+cp("outputs_dur/perline.wav", "perline.wav", "audio")   # Cách 3: per-câu
+_pls = os.path.join(ROOT, "outputs_dur/perline.srt")
+if os.path.exists(_pls):
+    shutil.copy2(_pls, os.path.join(D, "srt", "perline.srt"))
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
@@ -199,6 +203,18 @@ _multi_block = (
     + _mc("multi_total_12s.wav", "ép tổng 12s → 11.99s")
     + _mc("multi_total_20s.wav", "ép tổng 20s → 19.97s")
     + '</div>')
+
+_PERLINE = [("Welcome to this Harvard introductory course.", 2.5, 2.51),
+            ("Over the next few sessions, we will explore the core concepts together, with clear examples and hands-on practice.", 6.0, 6.00),
+            ("Whether you are just starting out or brushing up, you are in the right place.", 4.0, 4.01),
+            ("Let's get started.", 1.5, 1.51)]
+_perline_tbl = ('<table><tr><th>Câu</th><th>Target</th><th>Thực tế</th></tr>'
+                + "".join(f'<tr><td>{html.escape(s)}</td><td>{t:.1f}s</td><td>{a:.2f}s</td></tr>'
+                         for s, t, a in _PERLINE) + '</table>')
+_perline_srt = ""
+_plsrc = os.path.join(D, "srt", "perline.srt")
+if os.path.exists(_plsrc):
+    _perline_srt = open(_plsrc, encoding="utf-8").read()
 
 _DURCTRL = [("F5-TTS", "🟡 Có (tricky)", "<code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code>"),
             ("Kokoro", "🟡 Qua tốc độ", "tham số <code>speed</code> (hệ số tempo)"),
@@ -370,7 +386,11 @@ HTML = f"""<!doctype html>
   <div class="card">
     <div class="sub"><b>Đoạn nhiều câu</b> (course intro, 4 câu) — ép tốc độ / thời lượng cho cả đoạn:</div>
     {_multi_block}
-    <div class="note">Cách 1 giữ chất lượng tốt nhất (xấp xỉ giây); Cách 2 đúng giây tuyệt đối nhưng kéo giãn cả đoạn (kể cả khoảng lặng). Cần TỪNG CÂU đúng giây (khớp slide/SRT) → tách per-câu.</div>
+    <div class="durname" style="margin-top:12px">Cách 3 — PER-CÂU: mỗi câu một target riêng → phụ đề khớp chính xác từng dòng:</div>
+    {_perline_tbl}
+    <div class="durflex">{_mc("perline.wav", "Ghép lại (14.9s) + .srt khớp")}</div>
+    <div class="note">Tải <a href="srt/perline.srt" download>perline.srt</a> — mỗi dòng đúng thời lượng đặt trước (khớp slide/animation/video). SRT sinh ra:</div>
+    <pre class="script">{html.escape(_perline_srt)}</pre>
   </div>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
