@@ -70,6 +70,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--styletts2-command",
         help="Command template for a local StyleTTS2 inference script.",
     )
+
+    parser.add_argument("--litellm-base-url", default="https://litellm.athena.tools",
+                        help="LiteLLM proxy base URL.")
+    parser.add_argument("--litellm-api-key", default=None,
+                        help="LiteLLM API key (else env LITELLM_API_KEY / OPENAI_API_KEY).")
+    parser.add_argument("--litellm-model", default="gemini-2.5-pro-preview-tts",
+                        help="Model name as registered on the LiteLLM proxy.")
+    parser.add_argument("--litellm-voice", default="Kore", help="TTS voice name (e.g. Gemini: Kore, Puck, Charon).")
+    parser.add_argument("--litellm-format", default="wav", help="Requested audio format: wav, mp3, opus...")
+    parser.add_argument("--litellm-timeout", type=float, default=120.0, help="LiteLLM request timeout (s).")
     return parser
 
 

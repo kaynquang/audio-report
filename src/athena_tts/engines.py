@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import shlex
 import subprocess
 import sys
@@ -204,6 +205,58 @@ class StyleTTS2Engine:
             run_command(command, "StyleTTS2")
 
 
+@dataclass
+class LiteLLMEngine:
+    description = "LiteLLM proxy (OpenAI-compatible /audio/speech), e.g. Gemini TTS."
+
+    def synthesize(self, text: str, output: Path, args: object) -> None:
+        import json
+        import urllib.error
+        import urllib.request
+
+        key = args.litellm_api_key or os.environ.get("LITELLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        if not key:
+            raise EngineError(
+                "LiteLLM needs an API key. Set --litellm-api-key or env LITELLM_API_KEY."
+            )
+        base = args.litellm_base_url.rstrip("/")
+        url = base + "/v1/audio/speech"
+        fmt = args.litellm_format
+        payload = {
+            "model": args.litellm_model,
+            "input": text,
+            "voice": args.litellm_voice,
+            "response_format": fmt,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=args.litellm_timeout) as resp:
+                data = resp.read()
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", "replace")[:500]
+            raise EngineError(f"LiteLLM HTTP {exc.code}: {body}") from exc
+        except Exception as exc:
+            raise EngineError(f"LiteLLM request failed: {exc}") from exc
+
+        if not data or len(data) < 256:
+            raise EngineError(f"LiteLLM returned too little data ({len(data)} bytes): {data[:200]!r}")
+
+        ensure_parent(output)
+        if fmt == "wav":
+            output.write_bytes(data)
+        else:
+            # tải về dạng fmt rồi chuyển sang wav bằng ffmpeg
+            with tempfile.TemporaryDirectory(prefix="athena_litellm_") as tmp:
+                raw = Path(tmp) / f"audio.{fmt}"
+                raw.write_bytes(data)
+                run_command(["ffmpeg", "-y", "-i", str(raw), str(output)], "LiteLLM ffmpeg")
+
+
 def run_command(command: list[str], label: str) -> None:
     try:
         subprocess.run(command, check=True)
@@ -219,5 +272,6 @@ ENGINE_REGISTRY: dict[str, type[Engine]] = {
     "f5": F5Engine,
     "index": IndexTTSEngine,
     "styletts2": StyleTTS2Engine,
+    "litellm": LiteLLMEngine,
 }
 
