@@ -33,3 +33,6 @@ analysis/_timing_out/
 
 # cho phép video demo (Knowlify) bất chấp *.mp4
 !demo/video/*.mp4
+
+# secrets
+.env

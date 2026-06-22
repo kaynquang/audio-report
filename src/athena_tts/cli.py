@@ -1,8 +1,25 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
+
+
+def load_dotenv() -> None:
+    """Nạp biến môi trường từ file .env (project root hoặc cwd) nếu chưa set."""
+    candidates = [Path.cwd() / ".env", Path(__file__).resolve().parents[2] / ".env"]
+    seen = set()
+    for p in candidates:
+        if p in seen or not p.exists():
+            continue
+        seen.add(p)
+        for line in p.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 from .engines import ENGINE_REGISTRY, EngineError, auto_device
 from .text import DEFAULT_SCRIPT_PATH, load_text
@@ -106,6 +123,7 @@ def run_one(engine: str, text: str, args: argparse.Namespace) -> bool:
 
 
 def main(argv: list[str] | None = None) -> int:
+    load_dotenv()
     parser = build_parser()
     args = parser.parse_args(argv)
 

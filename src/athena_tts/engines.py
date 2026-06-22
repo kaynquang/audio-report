@@ -211,8 +211,16 @@ class LiteLLMEngine:
 
     def synthesize(self, text: str, output: Path, args: object) -> None:
         import json
+        import ssl
         import urllib.error
         import urllib.request
+
+        ctx = ssl.create_default_context()
+        try:
+            import certifi
+            ctx = ssl.create_default_context(cafile=certifi.where())
+        except Exception:
+            pass
 
         key = args.litellm_api_key or os.environ.get("LITELLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
         if not key:
@@ -231,11 +239,17 @@ class LiteLLMEngine:
         req = urllib.request.Request(
             url,
             data=json.dumps(payload).encode("utf-8"),
-            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            headers={
+                "Authorization": f"Bearer {key}",
+                "Content-Type": "application/json",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                              "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+                "Accept": "*/*",
+            },
             method="POST",
         )
         try:
-            with urllib.request.urlopen(req, timeout=args.litellm_timeout) as resp:
+            with urllib.request.urlopen(req, timeout=args.litellm_timeout, context=ctx) as resp:
                 data = resp.read()
         except urllib.error.HTTPError as exc:
             body = exc.read().decode("utf-8", "replace")[:500]
