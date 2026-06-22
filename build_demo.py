@@ -42,6 +42,8 @@ for e in ENG:
     cp(f"outputs3/{e}.wav", f"sy_{e}.wav", "audio")   # kịch bản A: "See you next time."
 # Gemini (LiteLLM) audio cho mục nghe/commercial
 cp("outputs/litellm.wav", "s1_litellm.wav", "audio")
+for _emo in ("neutral", "happy", "sad", "formal"):   # Gemini điều khiển cảm xúc bằng prompt
+    cp(f"outputs_dur/gemini_{_emo}.wav", f"gemini_{_emo}.wav", "audio")
 # phụ đề .srt cho course intro + demo điều khiển thời lượng (gồm cả Gemini)
 os.makedirs(os.path.join(D, "srt"), exist_ok=True)
 for e in ENG_ALL:
@@ -408,6 +410,14 @@ HTML = f"""<!doctype html>
       <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>~$10 / 1 triệu ký tự input (API) · tích hợp sẵn qua proxy LiteLLM nội bộ</td></tr>
       <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
     </table>
+    <div class="sub" style="margin-top:14px"><b>Gemini — điều khiển cảm xúc bằng prompt</b> (cùng câu, chỉ đổi mô tả style trong text):</div>
+    <div class="durflex">
+      {_mc("gemini_neutral.wav", "Neutral (4.2s)")}
+      {_mc("gemini_happy.wav", "Vui (cheerful)")}
+      {_mc("gemini_sad.wav", "Buồn (somber)")}
+      {_mc("gemini_formal.wav", "Trang trọng (formal)")}
+    </div>
+    <div class="note">Cách điều khiển của Gemini: ghi mô tả vào text (vd <code>"Say cheerfully: ..."</code>) — model đổi cách đọc, KHÔNG đọc câu lệnh ra. Đã test: tham số <code>speed</code> và <code>temperature</code> qua proxy <b>bị bỏ qua</b> → Gemini chỉ chỉnh được <b>giọng (voice ~30) + cảm xúc/phong cách (prompt)</b>; muốn đổi tốc độ phải dùng atempo hậu kỳ.</div>
     <div class="note">Giá tham khảo (6/2026) — kiểm tra lại trên trang chính thức:
       <a href="https://www.hume.ai/pricing" target="_blank">hume.ai/pricing</a> ·
       <a href="https://knowlify.com" target="_blank">knowlify.com</a>.

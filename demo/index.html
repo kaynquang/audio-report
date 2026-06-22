@@ -227,6 +227,14 @@ Let&#x27;s get started.
       <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>~$10 / 1 triệu ký tự input (API) · tích hợp sẵn qua proxy LiteLLM nội bộ</td></tr>
       <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
     </table>
+    <div class="sub" style="margin-top:14px"><b>Gemini — điều khiển cảm xúc bằng prompt</b> (cùng câu, chỉ đổi mô tả style trong text):</div>
+    <div class="durflex">
+      <div class="durclip"><div class="durlab">Neutral (4.2s)</div><audio controls preload="none" src="audio/gemini_neutral.wav"></audio></div>
+      <div class="durclip"><div class="durlab">Vui (cheerful)</div><audio controls preload="none" src="audio/gemini_happy.wav"></audio></div>
+      <div class="durclip"><div class="durlab">Buồn (somber)</div><audio controls preload="none" src="audio/gemini_sad.wav"></audio></div>
+      <div class="durclip"><div class="durlab">Trang trọng (formal)</div><audio controls preload="none" src="audio/gemini_formal.wav"></audio></div>
+    </div>
+    <div class="note">Cách điều khiển của Gemini: ghi mô tả vào text (vd <code>"Say cheerfully: ..."</code>) — model đổi cách đọc, KHÔNG đọc câu lệnh ra. Đã test: tham số <code>speed</code> và <code>temperature</code> qua proxy <b>bị bỏ qua</b> → Gemini chỉ chỉnh được <b>giọng (voice ~30) + cảm xúc/phong cách (prompt)</b>; muốn đổi tốc độ phải dùng atempo hậu kỳ.</div>
     <div class="note">Giá tham khảo (6/2026) — kiểm tra lại trên trang chính thức:
       <a href="https://www.hume.ai/pricing" target="_blank">hume.ai/pricing</a> ·
       <a href="https://knowlify.com" target="_blank">knowlify.com</a>.
