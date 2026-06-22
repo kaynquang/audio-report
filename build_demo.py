@@ -1,7 +1,7 @@
 """Dựng trang demo HTML self-contained trong demo/ để gửi cho team.
 Copy audio/ảnh/PDF cần thiết rồi sinh demo/index.html (mở bằng browser, hoặc zip gửi đi)."""
 from __future__ import annotations
-import os, shutil, html
+import os, shutil, html, json, re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 D = os.path.join(ROOT, "demo")
@@ -166,6 +166,44 @@ _durctrl_tbl = ('<table><tr><th>Engine</th><th>Điều khiển thời lượng?<
                 + '</table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) '
                   '→ ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div>')
 
+def parse_srt(path):
+    cues = []
+    if not os.path.exists(path):
+        return cues
+    for b in open(path, encoding="utf-8").read().strip().split("\n\n"):
+        ls = b.strip().splitlines()
+        if len(ls) < 3:
+            continue
+        m = re.search(r"(\d+):(\d+):(\d+)[,.](\d+)\s*-->\s*(\d+):(\d+):(\d+)[,.](\d+)", ls[1])
+        if not m:
+            continue
+        g = list(map(int, m.groups()))
+        s = g[0]*3600 + g[1]*60 + g[2] + g[3]/1000
+        e = g[4]*3600 + g[5]*60 + g[6] + g[7]/1000
+        cues.append([round(s, 2), round(e, 2), " ".join(ls[2:]).strip()])
+    return cues
+
+
+CUES = {e: parse_srt(os.path.join(D, "srt", f"{e}.srt")) for e in ENG}
+_kopts = "".join(f'<option value="{e}">{LABEL[e]}</option>' for e in ENG)
+_ksrt = " · ".join(f'<a href="srt/{e}.srt" download>{e}.srt</a>' for e in ENG)
+_KJS_BODY = """
+(function(){
+  var sel=document.getElementById('ksel'),aud=document.getElementById('kaud'),box=document.getElementById('kbox');
+  function render(){var c=CUES[sel.value]||[];box.innerHTML=c.map(function(x,i){return '<div class="cue" data-i="'+i+'">'+x[2]+'</div>';}).join('');}
+  function setEng(){aud.src='audio/course_'+sel.value+'.wav';render();}
+  sel.addEventListener('change',setEng);
+  aud.addEventListener('timeupdate',function(){
+    var t=aud.currentTime,c=CUES[sel.value]||[],a=-1;
+    for(var i=0;i<c.length;i++){if(t>=c[i][0]&&t<c[i][1]){a=i;break;}}
+    var els=box.querySelectorAll('.cue');
+    els.forEach(function(el,i){el.classList.toggle('on',i===a);if(i===a)el.scrollIntoView({block:'nearest'});});
+  });
+  setEng();
+})();
+</script>"""
+KJS = "<script>\nvar CUES=" + json.dumps(CUES, ensure_ascii=False) + ";\n" + _KJS_BODY
+
 synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.")
                + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
 
@@ -200,6 +238,12 @@ HTML = f"""<!doctype html>
   details.card > summary::before {{ content:"▸ "; color:var(--acc); font-weight:700; }}
   details.card[open] > summary::before {{ content:"▾ "; }}
   details.card > .dbody {{ margin-top:14px; }}
+  .krow {{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0; }}
+  #ksel {{ padding:6px 10px; border:1px solid var(--line); border-radius:8px; font-size:14px; background:#fff; }}
+  #kbox {{ max-height:230px; overflow-y:auto; border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; background:#fafbfc; line-height:1.7; }}
+  .cue {{ padding:5px 9px; color:var(--mut); border-radius:6px; transition:background .12s,color .12s; }}
+  .cue.on {{ color:var(--fg); background:#e7f0fe; font-weight:700; }}
   a {{ color:var(--acc); }}
   .pill {{ display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }}
@@ -251,15 +295,18 @@ HTML = f"""<!doctype html>
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề .srt</h2>
+  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học (~15s). Kèm phụ đề <code>.srt</code> đã chuẩn hoá cue (tải về dùng cho video). Kịch bản:</div>
+    <div class="sub">Clone từ <b>giọng video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học.
+    <b>Chọn engine → bấm ▶ play → phụ đề tự chạy/sáng theo giọng</b> (như video có sub). Kịch bản:</div>
     <pre class="script">{html.escape(SCRIPT_COURSE)}</pre>
     <table>{audio_row("⭐ Đoạn ref (TikTok, giây 10–20)", "course_ref.wav", "nguồn clone")}</table>
-    <table style="margin-top:10px">
-      <tr><th>Engine</th><th>Audio</th><th>Phụ đề</th></tr>
-      {_course_rows}
-    </table>
+    <div class="krow">
+      <select id="ksel">{_kopts}</select>
+      <audio id="kaud" controls preload="none"></audio>
+    </div>
+    <div id="kbox"></div>
+    <div class="note" style="margin-top:8px">Tải phụ đề .srt: {_ksrt}</div>
   </div>
   {details("📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)", _course_tbl)}
 
@@ -298,6 +345,7 @@ HTML = f"""<!doctype html>
 
   <div class="sub" style="margin-top:30px">Tạo tự động bằng <code>build_demo.py</code>. Để gửi: zip cả thư mục <code>demo/</code>.</div>
 </main>
+{KJS}
 </body></html>
 """
 

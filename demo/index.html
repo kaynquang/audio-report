@@ -28,6 +28,12 @@
   details.card > summary::before { content:"▸ "; color:var(--acc); font-weight:700; }
   details.card[open] > summary::before { content:"▾ "; }
   details.card > .dbody { margin-top:14px; }
+  .krow { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0; }
+  #ksel { padding:6px 10px; border:1px solid var(--line); border-radius:8px; font-size:14px; background:#fff; }
+  #kbox { max-height:230px; overflow-y:auto; border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; background:#fafbfc; line-height:1.7; }
+  .cue { padding:5px 9px; color:var(--mut); border-radius:6px; transition:background .12s,color .12s; }
+  .cue.on { color:var(--fg); background:#e7f0fe; font-weight:700; }
   a { color:var(--acc); }
   .pill { display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }
@@ -144,17 +150,20 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>IndexTTS2</td><td>68.8</td></tr>
 <tr><td>F5-TTS</td><td>253.7</td></tr></table></div></details>
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề .srt</h2>
+  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học (~15s). Kèm phụ đề <code>.srt</code> đã chuẩn hoá cue (tải về dùng cho video). Kịch bản:</div>
+    <div class="sub">Clone từ <b>giọng video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học.
+    <b>Chọn engine → bấm ▶ play → phụ đề tự chạy/sáng theo giọng</b> (như video có sub). Kịch bản:</div>
     <pre class="script">Welcome to this Harvard introductory course. Over the next few sessions, we will explore the core concepts together, with clear examples and hands-on practice. Whether you are just starting out or brushing up, you are in the right place. Let&#x27;s get started.</pre>
     <table><tr><td class="lbl">⭐ Đoạn ref (TikTok, giây 10–20)</td>
       <td><audio controls preload="none" src="audio/course_ref.wav"></audio></td>
       <td class="note">nguồn clone</td></tr></table>
-    <table style="margin-top:10px">
-      <tr><th>Engine</th><th>Audio</th><th>Phụ đề</th></tr>
-      <tr><td class="lbl">Kokoro (giọng cài sẵn)</td><td><audio controls preload="none" src="audio/course_kokoro.wav"></audio></td><td><a href="srt/kokoro.srt" download>⬇ kokoro.srt</a></td></tr><tr><td class="lbl">Chatterbox</td><td><audio controls preload="none" src="audio/course_chatterbox.wav"></audio></td><td><a href="srt/chatterbox.srt" download>⬇ chatterbox.srt</a></td></tr><tr><td class="lbl">F5-TTS</td><td><audio controls preload="none" src="audio/course_f5.wav"></audio></td><td><a href="srt/f5.srt" download>⬇ f5.srt</a></td></tr><tr><td class="lbl">StyleTTS2</td><td><audio controls preload="none" src="audio/course_styletts2.wav"></audio></td><td><a href="srt/styletts2.srt" download>⬇ styletts2.srt</a></td></tr><tr><td class="lbl">IndexTTS2</td><td><audio controls preload="none" src="audio/course_index.wav"></audio></td><td><a href="srt/index.srt" download>⬇ index.srt</a></td></tr>
-    </table>
+    <div class="krow">
+      <select id="ksel"><option value="kokoro">Kokoro</option><option value="chatterbox">Chatterbox</option><option value="f5">F5-TTS</option><option value="styletts2">StyleTTS2</option><option value="index">IndexTTS2</option></select>
+      <audio id="kaud" controls preload="none"></audio>
+    </div>
+    <div id="kbox"></div>
+    <div class="note" style="margin-top:8px">Tải phụ đề .srt: <a href="srt/kokoro.srt" download>kokoro.srt</a> · <a href="srt/chatterbox.srt" download>chatterbox.srt</a> · <a href="srt/f5.srt" download>f5.srt</a> · <a href="srt/styletts2.srt" download>styletts2.srt</a> · <a href="srt/index.srt" download>index.srt</a></div>
   </div>
   <details class="card"><summary>📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr><tr><td>Kokoro</td><td>7</td><td>4.8%</td></tr><tr><td>Chatterbox</td><td>7</td><td>4.8%</td></tr><tr><td>F5-TTS</td><td>7</td><td>14.3%</td></tr><tr><td>StyleTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>IndexTTS2</td><td>7</td><td>4.8%</td></tr></table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div></div></details>
 
@@ -195,4 +204,21 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 
   <div class="sub" style="margin-top:30px">Tạo tự động bằng <code>build_demo.py</code>. Để gửi: zip cả thư mục <code>demo/</code>.</div>
 </main>
+<script>
+var CUES={"kokoro": [[0.0, 2.62, "Welcome to this Harvard introductory course."], [2.86, 5.42, "Over the next few sessions, we will explore"], [5.42, 7.98, "the core concepts together, with clear examples"], [7.98, 9.22, "and hands-on practice."], [9.64, 11.7, "Whether you are just starting out or brushing"], [11.7, 13.46, "up, you are in the right place."], [13.74, 14.8, "Let's get started."]], "chatterbox": [[0.0, 1.86, "Welcome to this Harvard introductory course."], [2.26, 4.82, "Over the next few sessions, we will explore"], [4.82, 7.44, "the core concepts together with clear examples"], [7.44, 8.54, "and hands-on practice."], [8.96, 10.82, "Whether you are just starting out or brushing"], [10.82, 12.38, "up, you are in the right place."], [12.58, 13.38, "Let's get started."]], "f5": [[0.0, 2.28, "The welcome to this Harvard introductory course."], [2.48, 4.58, "Over the next few sessions, we will explore"], [4.58, 6.88, "the core concepts together with Cleaver examples"], [6.88, 7.84, "and hands-on practice."], [8.18, 10.76, "Whether you are just starting out or brushing"], [10.76, 12.46, "up, you're in the right place."], [12.66, 13.22, "Let's get started."]], "styletts2": [[0.0, 2.56, "Welcome to this Harvard introductory course."], [2.86, 5.02, "Over the next few sessions, we will explore"], [5.02, 7.74, "the core concepts together with clear examples"], [7.74, 9.0, "and hands-on practice."], [9.42, 11.74, "Whether you are just starting out or brushing"], [11.74, 13.34, "up, you are in the right place."], [13.5, 14.42, "Let's get started."]], "index": [[0.0, 1.82, "Welcome to this Harvard introductory course."], [1.96, 3.74, "Over the next few sessions, we will explore"], [3.74, 5.86, "the core concepts together with clear examples"], [5.86, 6.78, "and hands-on practice."], [7.06, 8.68, "Whether you are just starting out or brushing"], [8.68, 9.88, "up, you are in the right place."], [10.02, 10.6, "Let's get started."]]};
+
+(function(){
+  var sel=document.getElementById('ksel'),aud=document.getElementById('kaud'),box=document.getElementById('kbox');
+  function render(){var c=CUES[sel.value]||[];box.innerHTML=c.map(function(x,i){return '<div class="cue" data-i="'+i+'">'+x[2]+'</div>';}).join('');}
+  function setEng(){aud.src='audio/course_'+sel.value+'.wav';render();}
+  sel.addEventListener('change',setEng);
+  aud.addEventListener('timeupdate',function(){
+    var t=aud.currentTime,c=CUES[sel.value]||[],a=-1;
+    for(var i=0;i<c.length;i++){if(t>=c[i][0]&&t<c[i][1]){a=i;break;}}
+    var els=box.querySelectorAll('.cue');
+    els.forEach(function(el,i){el.classList.toggle('on',i===a);if(i===a)el.scrollIntoView({block:'nearest'});});
+  });
+  setEng();
+})();
+</script>
 </body></html>
