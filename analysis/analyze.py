@@ -23,9 +23,9 @@ OUT_DIR = os.path.join(ROOT, "outputs")
 ANA_DIR = os.path.join(ROOT, "analysis")
 os.makedirs(ANA_DIR, exist_ok=True)
 
-ENGINES = ["original", "kokoro", "chatterbox", "f5", "styletts2", "index"]
+ENGINES = ["original", "kokoro", "chatterbox", "f5", "styletts2", "index", "litellm"]
 COLORS = {"original": "#000000", "kokoro": "#1f77b4", "chatterbox": "#ff7f0e",
-          "f5": "#2ca02c", "styletts2": "#d62728", "index": "#9467bd"}
+          "f5": "#2ca02c", "styletts2": "#d62728", "index": "#9467bd", "litellm": "#17becf"}
 SR = 24000
 FMIN, FMAX = 65.0, 400.0  # human speech F0 search range
 

@@ -68,9 +68,9 @@
     <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
-  <h2>1) Nghe thử — kịch bản dài (5 engine)</h2>
+  <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="card">
-    <div class="sub">Kịch bản 1 (clone từ <code>refs/speaker.wav</code>) — nghe để cảm nhận tổng thể:</div>
+    <div class="sub">Kịch bản 1 (4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset) — nghe để cảm nhận tổng thể:</div>
     <pre class="script">Hello, this is a short voice consistency test.
 Please keep the same tone, speed, and energy throughout the recording.
 The quick brown fox jumps over the lazy dog.
@@ -81,9 +81,10 @@ The product sounds clear, stable, and natural.
 The product sounds clear, stable, and natural.
 End of test. Thank you.</pre>
     <table>
+      
       <tr><td class="lbl">Kokoro</td>
       <td><audio controls preload="none" src="audio/s1_kokoro.wav"></audio></td>
-      <td class="note">giọng cài sẵn (không clone)</td></tr><tr><td class="lbl">Chatterbox</td>
+      <td class="note">giọng preset (không clone)</td></tr><tr><td class="lbl">Chatterbox</td>
       <td><audio controls preload="none" src="audio/s1_chatterbox.wav"></audio></td>
       <td class="note"></td></tr><tr><td class="lbl">F5-TTS</td>
       <td><audio controls preload="none" src="audio/s1_f5.wav"></audio></td>
@@ -91,7 +92,9 @@ End of test. Thank you.</pre>
       <td><audio controls preload="none" src="audio/s1_styletts2.wav"></audio></td>
       <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
       <td><audio controls preload="none" src="audio/s1_index.wav"></audio></td>
-      <td class="note"></td></tr>
+      <td class="note"></td></tr><tr><td class="lbl">Gemini 2.5 Pro (LiteLLM)</td>
+      <td><audio controls preload="none" src="audio/s1_litellm.wav"></audio></td>
+      <td class="note">giọng preset (không clone)</td></tr>
     </table>
   </div>
   <details class="card"><summary>📊 Biểu đồ — sóng &amp; cao độ (bấm để mở)</summary><div class="dbody"><figure><img src="img/compare_waveforms.png" alt="Biểu đồ sóng 5 engine + giọng gốc. Trục ngang: thời gian (giây); trục dọc: biên độ tín hiệu."/>
@@ -105,7 +108,8 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <figcaption>Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.</figcaption></figure></div></details>
 
   <h2>2) Độ tự nhiên — so với giọng người thật</h2>
-  <details class="card"><summary>📊 Số liệu &amp; biểu đồ độ tự nhiên (bấm để mở)</summary><div class="dbody"><div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div><table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>StyleTTS2</td><td>89.6</td></tr>
+  <details class="card"><summary>📊 Số liệu &amp; biểu đồ độ tự nhiên (bấm để mở)</summary><div class="dbody"><div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div><table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>90.2</td></tr>
+<tr><td>StyleTTS2</td><td>89.6</td></tr>
 <tr><td>IndexTTS2</td><td>89.5</td></tr>
 <tr><td>Kokoro</td><td>80.9</td></tr>
 <tr><td>Chatterbox</td><td>78.4</td></tr>

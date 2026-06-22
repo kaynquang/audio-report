@@ -17,16 +17,18 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ANA = os.path.join(ROOT, "analysis")
 SR, FMIN, FMAX = 24000, 65.0, 400.0
 
-ORDER = ["kokoro", "chatterbox", "f5", "styletts2", "index"]
+ORDER = ["kokoro", "chatterbox", "f5", "styletts2", "index"]          # 5 open-source (mục clone)
+ORDER_ALL = ORDER + ["litellm"]                                       # + Gemini (mục 1,2,4)
 LABEL = {"kokoro": "Kokoro", "chatterbox": "Chatterbox", "f5": "F5-TTS",
-         "styletts2": "StyleTTS2", "index": "IndexTTS2"}
+         "styletts2": "StyleTTS2", "index": "IndexTTS2", "litellm": "Gemini (LiteLLM)"}
 COLORS = {"kokoro": "#1f77b4", "chatterbox": "#ff7f0e", "f5": "#2ca02c",
-          "styletts2": "#d62728", "index": "#9467bd"}
+          "styletts2": "#d62728", "index": "#9467bd", "litellm": "#17becf"}
 REF = "#111111"
 
 # số liệu (đồng bộ, lấy từ các phép đo trước)
-SIM_NEIL = {"index": 0.951, "f5": 0.876, "chatterbox": 0.873, "styletts2": 0.797, "kokoro": 0.517}
-HUMAN = {"styletts2": 89.6, "index": 89.5, "kokoro": 80.9, "chatterbox": 78.4, "f5": 35.4}
+SIM_NEIL = {"index": 0.951, "f5": 0.876, "chatterbox": 0.873, "styletts2": 0.797,
+            "kokoro": 0.517, "litellm": 0.598}
+HUMAN = {"litellm": 90.2, "styletts2": 89.6, "index": 89.5, "kokoro": 80.9, "chatterbox": 78.4, "f5": 35.4}
 
 plt.rcParams.update({
     "figure.facecolor": "white", "savefig.facecolor": "white", "savefig.dpi": 120,
@@ -117,8 +119,8 @@ def metrics_vs_original(out):
     fig, axes = plt.subplots(1, len(METRICS), figsize=(15, 4.2))
     for ax, (k, lab) in zip(axes, METRICS):
         ov = float(rows["original"][k])
-        vals = [float(rows[e][k]) for e in ORDER]
-        ax.bar([LABEL[e] for e in ORDER], vals, color=[COLORS[e] for e in ORDER])
+        vals = [float(rows[e][k]) for e in ORDER_ALL]
+        ax.bar([LABEL[e] for e in ORDER_ALL], vals, color=[COLORS[e] for e in ORDER_ALL])
         ax.axhline(ov, ls="--", color=REF, lw=1.5)
         ax.set_title(lab, fontsize=11)
         ax.tick_params(axis="x", rotation=90, labelsize=8)
@@ -129,7 +131,7 @@ def metrics_vs_original(out):
 
 def scatter(out):
     fig, ax = plt.subplots(figsize=(9, 6))
-    for e in ORDER:
+    for e in ORDER_ALL:
         x, y = SIM_NEIL[e], HUMAN[e]
         ax.scatter(x, y, s=190, color=COLORS[e], edgecolor=REF, lw=1.2, zorder=3)
         ax.annotate(LABEL[e], (x, y), textcoords="offset points", xytext=(9, 6), fontsize=11)
@@ -144,9 +146,9 @@ def scatter(out):
 def main():
     # 1) sóng kịch bản 1: giọng gốc + 5 engine
     rows1 = [("Giọng gốc", os.path.join(ROOT, "refs/original_voice.wav"), REF, True)] + \
-            [(LABEL[e], os.path.join(ROOT, f"outputs/{e}.wav"), COLORS[e], False) for e in ORDER]
-    stack_waveforms(rows1, "Sóng âm — kịch bản 1 (giọng gốc + 5 engine)", "compare_waveforms.png")
-    stack_pitch(rows1, "Cao độ F0 — kịch bản 1 (giọng gốc + 5 engine)", "compare_pitch.png")
+            [(LABEL[e], os.path.join(ROOT, f"outputs/{e}.wav"), COLORS[e], False) for e in ORDER_ALL]
+    stack_waveforms(rows1, "Sóng âm — kịch bản 1 (giọng gốc + 6 engine)", "compare_waveforms.png")
+    stack_pitch(rows1, "Cao độ F0 — kịch bản 1 (giọng gốc + 6 engine)", "compare_pitch.png")
 
     # 2) clip ref neil + 5 engine (cùng câu)
     rowsr = [("Clip ref (neil)", os.path.join(ROOT, "refs/neil.wav"), REF, True)] + \

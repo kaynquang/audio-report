@@ -92,8 +92,8 @@ def img(name, cap):
 
 
 # tables data
-human = [("StyleTTS2", 89.6), ("IndexTTS2", 89.5), ("Kokoro", 80.9), ("Chatterbox", 78.4),
-         ("Giọng gốc (người)", 51.7), ("F5-TTS", 35.4)]
+human = [("Gemini 2.5 Pro (LiteLLM)", 90.2), ("StyleTTS2", 89.6), ("IndexTTS2", 89.5),
+         ("Kokoro", 80.9), ("Chatterbox", 78.4), ("Giọng gốc (người)", 51.7), ("F5-TTS", 35.4)]
 clone = [("IndexTTS2", 0.951), ("F5-TTS", 0.876), ("Chatterbox", 0.873),
          ("StyleTTS2", 0.797), ("Kokoro (không clone)", 0.517)]
 timing = [("Kokoro", 12.7), ("StyleTTS2", 29.5), ("Chatterbox", 38.0),
@@ -293,12 +293,13 @@ HTML = f"""<!doctype html>
     <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
-  <h2>1) Nghe thử — kịch bản dài (5 engine)</h2>
+  <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="card">
-    <div class="sub">Kịch bản 1 (clone từ <code>refs/speaker.wav</code>) — nghe để cảm nhận tổng thể:</div>
+    <div class="sub">Kịch bản 1 (4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset) — nghe để cảm nhận tổng thể:</div>
     <pre class="script">{html.escape(SCRIPT1)}</pre>
     <table>
-      {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
+      {audio_row("⭐ Giọng gốc (người)", "s1_original.wav", "ground truth")}
+      {''.join(audio_row(LABEL[e], f"s1_{e}.wav", "giọng preset (không clone)" if e in ("kokoro", "litellm") else "") for e in ENG_ALL)}
     </table>
   </div>
   {details("📊 Biểu đồ — sóng & cao độ (bấm để mở)", imgs1)}
