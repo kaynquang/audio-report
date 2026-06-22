@@ -1,7 +1,7 @@
 """Dựng trang demo HTML self-contained trong demo/ để gửi cho team.
 Copy audio/ảnh/PDF cần thiết rồi sinh demo/index.html (mở bằng browser, hoặc zip gửi đi)."""
 from __future__ import annotations
-import os, shutil, html, json, re
+import os, shutil, html, json, re, wave, contextlib
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 D = os.path.join(ROOT, "demo")
@@ -45,7 +45,7 @@ for e in ENG:
     if os.path.exists(_s):
         shutil.copy2(_s, os.path.join(D, "srt", f"{e}.srt"))
 for e in ENG:
-    for s in ("base", "2s", "4s"):
+    for s in ("base", "2s", "3s", "4s", "5s", "6s"):
         cp(f"outputs_dur/{e}_{s}.wav", f"dur_{e}_{s}.wav", "audio")
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
@@ -148,11 +148,27 @@ _course_tbl = ('<table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp
                + '</table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. '
                  'WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div>')
 
-_dur_rows = "".join(
-    f'<tr><td class="lbl">{LABEL[e]}</td>'
-    f'<td><audio controls preload="none" src="audio/dur_{e}_base.wav"></audio></td>'
-    f'<td><audio controls preload="none" src="audio/dur_{e}_2s.wav"></audio></td>'
-    f'<td><audio controls preload="none" src="audio/dur_{e}_4s.wav"></audio></td></tr>' for e in ENG)
+def _wd(path):
+    try:
+        with contextlib.closing(wave.open(path, "rb")) as w:
+            return w.getnframes() / float(w.getframerate())
+    except Exception:
+        return 0.0
+
+
+def _durclip(e, s, lab):
+    return (f'<div class="durclip"><div class="durlab">{lab}</div>'
+            f'<audio controls preload="none" src="audio/dur_{e}_{s}.wav"></audio></div>')
+
+
+_dur_blocks = ""
+for e in ENG:
+    _bd = _wd(os.path.join(ROOT, "outputs_dur", f"{e}_base.wav"))
+    _clips = _durclip(e, "base", f"Gốc — {_bd:.1f}s")
+    for _t in ("2s", "3s", "4s", "5s", "6s"):
+        _ad = _wd(os.path.join(ROOT, "outputs_dur", f"{e}_{_t}.wav"))
+        _clips += _durclip(e, _t, f"Ép {_t[:-1]} giây → {_ad:.2f}s")
+    _dur_blocks += f'<div class="dureng"><div class="durname">{LABEL[e]}</div><div class="durflex">{_clips}</div></div>'
 
 _DURCTRL = [("F5-TTS", "🟡 Có (tricky)", "<code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code>"),
             ("Kokoro", "🟡 Qua tốc độ", "tham số <code>speed</code> (hệ số tempo)"),
@@ -227,8 +243,12 @@ HTML = f"""<!doctype html>
   td.lbl {{ width:190px; font-weight:600; }}
   td.note {{ color:var(--mut); font-size:13px; }}
   audio {{ width:320px; height:34px; }}
-  .durtbl audio {{ width:200px; }}
-  .durtbl td, .durtbl th {{ font-size:13px; }}
+  .dureng {{ margin:14px 0; padding-bottom:12px; border-bottom:1px solid var(--line); }}
+  .durname {{ font-weight:700; margin-bottom:7px; }}
+  .durflex {{ display:flex; flex-wrap:wrap; gap:10px; }}
+  .durclip {{ background:#fafbfc; border:1px solid var(--line); border-radius:8px; padding:6px 9px; }}
+  .durlab {{ font-size:12px; color:var(--mut); margin-bottom:4px; }}
+  .durclip audio {{ width:178px; height:30px; }}
   video {{ width:100%; max-width:640px; border-radius:10px; border:1px solid var(--line); display:block; }}
   figure {{ margin:14px 0; }}
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
@@ -312,11 +332,8 @@ HTML = f"""<!doctype html>
 
   <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
   <div class="card">
-    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép đúng 2 giây / 4 giây</b> (giữ cao độ). Nghe để thấy có thể đặt thời lượng tuỳ ý cho từng model.</div>
-    <table class="durtbl">
-      <tr><th>Engine</th><th>Gốc (tự nhiên)</th><th>Ép 2 giây</th><th>Ép 4 giây</th></tr>
-      {_dur_rows}
-    </table>
+    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép thành 2 / 3 / 4 / 5 / 6 giây</b> (giữ cao độ). Mỗi nút ghi rõ mốc + số giây thực tế:</div>
+    {_dur_blocks}
   </div>
   {details("📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)", _durctrl_tbl)}
 
