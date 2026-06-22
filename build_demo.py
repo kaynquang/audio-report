@@ -38,6 +38,15 @@ cp("refs/neil.wav", "ref_neil.wav", "audio")
 for e in ENG:
     cp(f"outputs4/{e}.wav", f"rl_{e}.wav", "audio")   # kịch bản B: đúng thoại ref
     cp(f"outputs3/{e}.wav", f"sy_{e}.wav", "audio")   # kịch bản A: "See you next time."
+# phụ đề .srt cho course intro + demo điều khiển thời lượng
+os.makedirs(os.path.join(D, "srt"), exist_ok=True)
+for e in ENG:
+    _s = os.path.join(ROOT, f"outputs5_srt/{e}.srt")
+    if os.path.exists(_s):
+        shutil.copy2(_s, os.path.join(D, "srt", f"{e}.srt"))
+for _src, _dst in [("base", "dur_base"), ("target_2.0s", "dur_2s"),
+                   ("target_3.0s", "dur_3s"), ("target_4.0s", "dur_4s")]:
+    cp(f"outputs_dur/{_src}.wav", f"{_dst}.wav", "audio")
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
@@ -128,6 +137,35 @@ clone_block = ('<table><tr><th>Engine</th><th>Kịch bản A — “See you next
                + img("similarity_refline_chart.png", "Độ giống giọng ref neil — kịch bản B (đọc cùng câu). Trục dọc: cosine (0–1).")
                + img("compare_refline_waveforms.png", "Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ."))
 
+_course_rows = "".join(
+    f'<tr><td class="lbl">{LABEL[e]}{" (giọng cài sẵn)" if e == "kokoro" else ""}</td>'
+    f'<td><audio controls preload="none" src="audio/course_{e}.wav"></audio></td>'
+    f'<td><a href="srt/{e}.srt" download>⬇ {e}.srt</a></td></tr>' for e in ENG)
+
+_COURSE_WER = {"kokoro": 4.8, "chatterbox": 4.8, "styletts2": 4.8, "index": 4.8, "f5": 14.3}
+_course_tbl = ('<table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr>'
+               + "".join(f"<tr><td>{LABEL[e]}</td><td>7</td><td>{_COURSE_WER[e]:.1f}%</td></tr>" for e in ENG)
+               + '</table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. '
+                 'WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div>')
+
+_dur_rows = "".join(
+    f'<tr><td class="lbl">{lab}</td><td><audio controls preload="none" src="audio/{fn}"></audio></td>'
+    f'<td class="note">{note}</td></tr>'
+    for lab, fn, note in [("Gốc (tự nhiên)", "dur_base.wav", "≈ 3.15s"),
+                          ("Ép 2 giây", "dur_2s.wav", "thực tế 2.01s"),
+                          ("Ép 3 giây", "dur_3s.wav", "thực tế 3.01s"),
+                          ("Ép 4 giây", "dur_4s.wav", "thực tế 3.99s")])
+
+_DURCTRL = [("F5-TTS", "✅ Trực tiếp", "<code>--fix_duration</code> (ép tổng giây) + <code>--speed</code>"),
+            ("Kokoro", "🟡 Qua tốc độ", "tham số <code>speed</code> (hệ số tempo)"),
+            ("StyleTTS2", "🟡 Qua tốc độ", "scale bộ dự đoán thời lượng (cần code)"),
+            ("IndexTTS2", "🟡 Nâng cao", "model hỗ trợ duration-control; API cơ bản tự canh"),
+            ("Chatterbox", "❌ Tự canh", "không có tham số thời lượng")]
+_durctrl_tbl = ('<table><tr><th>Engine</th><th>Điều khiển thời lượng?</th><th>Cách</th></tr>'
+                + "".join(f"<tr><td class='lbl'>{n}</td><td>{s}</td><td>{c}</td></tr>" for n, s, c in _DURCTRL)
+                + '</table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) '
+                  '→ ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div>')
+
 synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.")
                + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
 
@@ -213,17 +251,26 @@ HTML = f"""<!doctype html>
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone)</h2>
+  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề .srt</h2>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc một đoạn giới thiệu khoá học kiểu Harvard (~15s):</div>
+    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học (~15s). Kèm phụ đề <code>.srt</code> đã chuẩn hoá cue (tải về dùng cho video). Kịch bản:</div>
     <pre class="script">{html.escape(SCRIPT_COURSE)}</pre>
-    <table>
-      {audio_row("⭐ Đoạn ref (TikTok, giây 10–20)", "course_ref.wav", "nguồn clone")}
-      {''.join(audio_row(LABEL[e], f"course_{e}.wav", "" if e!="kokoro" else "giọng cài sẵn (không clone)") for e in ENG)}
+    <table>{audio_row("⭐ Đoạn ref (TikTok, giây 10–20)", "course_ref.wav", "nguồn clone")}</table>
+    <table style="margin-top:10px">
+      <tr><th>Engine</th><th>Audio</th><th>Phụ đề</th></tr>
+      {_course_rows}
     </table>
   </div>
+  {details("📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)", _course_tbl)}
 
-  <h2>6) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <div class="card">
+    <div class="sub">Cùng một câu, ép thành đúng 2 / 3 / 4 giây (giữ cao độ):</div>
+    <table>{_dur_rows}</table>
+  </div>
+  {details("📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)", _durctrl_tbl)}
+
+  <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="card">
     <div class="sub">Ngoài 5 engine mã nguồn mở, đây là 2 dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
     <table>
@@ -242,7 +289,7 @@ HTML = f"""<!doctype html>
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2>7) Báo cáo PDF đầy đủ</h2>
+  <h2>8) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}

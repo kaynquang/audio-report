@@ -144,29 +144,28 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>IndexTTS2</td><td>68.8</td></tr>
 <tr><td>F5-TTS</td><td>253.7</td></tr></table></div></details>
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone)</h2>
+  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề .srt</h2>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc một đoạn giới thiệu khoá học kiểu Harvard (~15s):</div>
+    <div class="sub">Clone từ <b>giọng trong video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học (~15s). Kèm phụ đề <code>.srt</code> đã chuẩn hoá cue (tải về dùng cho video). Kịch bản:</div>
     <pre class="script">Welcome to this Harvard introductory course. Over the next few sessions, we will explore the core concepts together, with clear examples and hands-on practice. Whether you are just starting out or brushing up, you are in the right place. Let&#x27;s get started.</pre>
-    <table>
-      <tr><td class="lbl">⭐ Đoạn ref (TikTok, giây 10–20)</td>
+    <table><tr><td class="lbl">⭐ Đoạn ref (TikTok, giây 10–20)</td>
       <td><audio controls preload="none" src="audio/course_ref.wav"></audio></td>
-      <td class="note">nguồn clone</td></tr>
-      <tr><td class="lbl">Kokoro</td>
-      <td><audio controls preload="none" src="audio/course_kokoro.wav"></audio></td>
-      <td class="note">giọng cài sẵn (không clone)</td></tr><tr><td class="lbl">Chatterbox</td>
-      <td><audio controls preload="none" src="audio/course_chatterbox.wav"></audio></td>
-      <td class="note"></td></tr><tr><td class="lbl">F5-TTS</td>
-      <td><audio controls preload="none" src="audio/course_f5.wav"></audio></td>
-      <td class="note"></td></tr><tr><td class="lbl">StyleTTS2</td>
-      <td><audio controls preload="none" src="audio/course_styletts2.wav"></audio></td>
-      <td class="note"></td></tr><tr><td class="lbl">IndexTTS2</td>
-      <td><audio controls preload="none" src="audio/course_index.wav"></audio></td>
-      <td class="note"></td></tr>
+      <td class="note">nguồn clone</td></tr></table>
+    <table style="margin-top:10px">
+      <tr><th>Engine</th><th>Audio</th><th>Phụ đề</th></tr>
+      <tr><td class="lbl">Kokoro (giọng cài sẵn)</td><td><audio controls preload="none" src="audio/course_kokoro.wav"></audio></td><td><a href="srt/kokoro.srt" download>⬇ kokoro.srt</a></td></tr><tr><td class="lbl">Chatterbox</td><td><audio controls preload="none" src="audio/course_chatterbox.wav"></audio></td><td><a href="srt/chatterbox.srt" download>⬇ chatterbox.srt</a></td></tr><tr><td class="lbl">F5-TTS</td><td><audio controls preload="none" src="audio/course_f5.wav"></audio></td><td><a href="srt/f5.srt" download>⬇ f5.srt</a></td></tr><tr><td class="lbl">StyleTTS2</td><td><audio controls preload="none" src="audio/course_styletts2.wav"></audio></td><td><a href="srt/styletts2.srt" download>⬇ styletts2.srt</a></td></tr><tr><td class="lbl">IndexTTS2</td><td><audio controls preload="none" src="audio/course_index.wav"></audio></td><td><a href="srt/index.srt" download>⬇ index.srt</a></td></tr>
     </table>
   </div>
+  <details class="card"><summary>📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr><tr><td>Kokoro</td><td>7</td><td>4.8%</td></tr><tr><td>Chatterbox</td><td>7</td><td>4.8%</td></tr><tr><td>F5-TTS</td><td>7</td><td>14.3%</td></tr><tr><td>StyleTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>IndexTTS2</td><td>7</td><td>4.8%</td></tr></table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div></div></details>
 
-  <h2>6) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <div class="card">
+    <div class="sub">Cùng một câu, ép thành đúng 2 / 3 / 4 giây (giữ cao độ):</div>
+    <table><tr><td class="lbl">Gốc (tự nhiên)</td><td><audio controls preload="none" src="audio/dur_base.wav"></audio></td><td class="note">≈ 3.15s</td></tr><tr><td class="lbl">Ép 2 giây</td><td><audio controls preload="none" src="audio/dur_2s.wav"></audio></td><td class="note">thực tế 2.01s</td></tr><tr><td class="lbl">Ép 3 giây</td><td><audio controls preload="none" src="audio/dur_3s.wav"></audio></td><td class="note">thực tế 3.01s</td></tr><tr><td class="lbl">Ép 4 giây</td><td><audio controls preload="none" src="audio/dur_4s.wav"></audio></td><td class="note">thực tế 3.99s</td></tr></table>
+  </div>
+  <details class="card"><summary>📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Điều khiển thời lượng?</th><th>Cách</th></tr><tr><td class='lbl'>F5-TTS</td><td>✅ Trực tiếp</td><td><code>--fix_duration</code> (ép tổng giây) + <code>--speed</code></td></tr><tr><td class='lbl'>Kokoro</td><td>🟡 Qua tốc độ</td><td>tham số <code>speed</code> (hệ số tempo)</td></tr><tr><td class='lbl'>StyleTTS2</td><td>🟡 Qua tốc độ</td><td>scale bộ dự đoán thời lượng (cần code)</td></tr><tr><td class='lbl'>IndexTTS2</td><td>🟡 Nâng cao</td><td>model hỗ trợ duration-control; API cơ bản tự canh</td></tr><tr><td class='lbl'>Chatterbox</td><td>❌ Tự canh</td><td>không có tham số thời lượng</td></tr></table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) → ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div></div></details>
+
+  <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="card">
     <div class="sub">Ngoài 5 engine mã nguồn mở, đây là 2 dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
     <table>
@@ -187,7 +186,7 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2>7) Báo cáo PDF đầy đủ</h2>
+  <h2>8) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>
