@@ -8,7 +8,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "outputs5")
 SRT_DIR = os.path.join(ROOT, "outputs5_srt")
 os.makedirs(SRT_DIR, exist_ok=True)
-ENG = ["kokoro", "chatterbox", "f5", "styletts2", "index"]
+ENG = ["kokoro", "chatterbox", "f5", "styletts2", "index", "litellm"]
 SCRIPT = open(os.path.join(ROOT, "scripts/harvard_intro.txt")).read().strip()
 
 MAX_WORDS, MAX_CHARS, MAX_DUR = 8, 42, 5.0

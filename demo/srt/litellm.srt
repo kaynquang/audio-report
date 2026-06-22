@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:02,500
+Welcome to this Harvard introductory course.
+
+2
+00:00:02,700 --> 00:00:05,180
+Over the next few sessions, we will explore
+
+3
+00:00:05,180 --> 00:00:08,000
+the core concepts together with clear examples
+
+4
+00:00:08,000 --> 00:00:09,440
+and hands-on practice.
+
+5
+00:00:09,780 --> 00:00:12,040
+Whether you're just starting out or brushing
+
+6
+00:00:12,040 --> 00:00:13,860
+up, you are in the right place.
+
+7
+00:00:14,060 --> 00:00:14,960
+Let's get started.

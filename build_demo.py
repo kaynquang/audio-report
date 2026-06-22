@@ -19,7 +19,9 @@ def cp(src, dstname, sub):
 
 ENG = ["kokoro", "chatterbox", "f5", "styletts2", "index"]
 LABEL = {"kokoro": "Kokoro", "chatterbox": "Chatterbox", "f5": "F5-TTS",
-         "styletts2": "StyleTTS2", "index": "IndexTTS2"}
+         "styletts2": "StyleTTS2", "index": "IndexTTS2",
+         "litellm": "Gemini 2.5 Pro (LiteLLM)"}
+ENG_ALL = ENG + ["litellm"]   # gồm cả Gemini (commercial) cho các mục nghe/karaoke/thời lượng
 
 
 def _read(name):
@@ -38,13 +40,16 @@ cp("refs/neil.wav", "ref_neil.wav", "audio")
 for e in ENG:
     cp(f"outputs4/{e}.wav", f"rl_{e}.wav", "audio")   # kịch bản B: đúng thoại ref
     cp(f"outputs3/{e}.wav", f"sy_{e}.wav", "audio")   # kịch bản A: "See you next time."
-# phụ đề .srt cho course intro + demo điều khiển thời lượng
+# Gemini (LiteLLM) audio cho mục nghe/commercial
+cp("outputs/litellm.wav", "s1_litellm.wav", "audio")
+# phụ đề .srt cho course intro + demo điều khiển thời lượng (gồm cả Gemini)
 os.makedirs(os.path.join(D, "srt"), exist_ok=True)
-for e in ENG:
+for e in ENG_ALL:
+    cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")
     _s = os.path.join(ROOT, f"outputs5_srt/{e}.srt")
     if os.path.exists(_s):
         shutil.copy2(_s, os.path.join(D, "srt", f"{e}.srt"))
-for e in ENG:
+for e in ENG_ALL:
     for s in ("base", "2s", "3s", "4s", "5s", "6s"):
         cp(f"outputs_dur/{e}_{s}.wav", f"dur_{e}_{s}.wav", "audio")
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
@@ -140,11 +145,11 @@ clone_block = ('<table><tr><th>Engine</th><th>Kịch bản A — “See you next
 _course_rows = "".join(
     f'<tr><td class="lbl">{LABEL[e]}{" (giọng cài sẵn)" if e == "kokoro" else ""}</td>'
     f'<td><audio controls preload="none" src="audio/course_{e}.wav"></audio></td>'
-    f'<td><a href="srt/{e}.srt" download>⬇ {e}.srt</a></td></tr>' for e in ENG)
+    f'<td><a href="srt/{e}.srt" download>⬇ {e}.srt</a></td></tr>' for e in ENG_ALL)
 
-_COURSE_WER = {"kokoro": 4.8, "chatterbox": 4.8, "styletts2": 4.8, "index": 4.8, "f5": 14.3}
+_COURSE_WER = {"kokoro": 4.8, "chatterbox": 4.8, "styletts2": 4.8, "index": 4.8, "f5": 14.3, "litellm": 9.5}
 _course_tbl = ('<table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr>'
-               + "".join(f"<tr><td>{LABEL[e]}</td><td>7</td><td>{_COURSE_WER[e]:.1f}%</td></tr>" for e in ENG)
+               + "".join(f"<tr><td>{LABEL[e]}</td><td>7</td><td>{_COURSE_WER[e]:.1f}%</td></tr>" for e in ENG_ALL)
                + '</table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. '
                  'WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div>')
 
@@ -162,7 +167,7 @@ def _durclip(e, s, lab):
 
 
 _dur_blocks = ""
-for e in ENG:
+for e in ENG_ALL:
     _bd = _wd(os.path.join(ROOT, "outputs_dur", f"{e}_base.wav"))
     _clips = _durclip(e, "base", f"Gốc — {_bd:.1f}s")
     for _t in ("2s", "3s", "4s", "5s", "6s"):
@@ -198,8 +203,8 @@ def parse_srt(path):
     return cues
 
 
-CUES = {e: parse_srt(os.path.join(D, "srt", f"{e}.srt")) for e in ENG}
-_kopts = "".join(f'<option value="{e}">{LABEL[e]}</option>' for e in ENG)
+CUES = {e: parse_srt(os.path.join(D, "srt", f"{e}.srt")) for e in ENG_ALL}
+_kopts = "".join(f'<option value="{e}">{LABEL[e]}</option>' for e in ENG_ALL)
 _ksrt = " · ".join(f'<a href="srt/{e}.srt" download>{e}.srt</a>' for e in ENG)
 _KJS_BODY = """
 (function(){
@@ -339,15 +344,17 @@ HTML = f"""<!doctype html>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="card">
-    <div class="sub">Ngoài 5 engine mã nguồn mở, đây là 2 dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
+    <div class="sub">Ngoài 5 engine mã nguồn mở, đây là các dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
     <table>
       {audio_row("HumeAI — Octave 2 (audio)", "humeai.wav", "TTS biểu cảm, có API")}
+      {audio_row("Gemini 2.5 Pro TTS (qua LiteLLM)", "s1_litellm.wav", "Google · giọng preset · không clone")}
     </table>
     <div class="sub" style="margin-top:12px"><b>Knowlify</b> — không chỉ giọng mà tạo cả <b>VIDEO explainer</b> từ text/tài liệu:</div>
     <video controls preload="none" src="video/knowlify.mp4"></video>
     <table style="margin-top:14px">
       <tr><th>Dịch vụ</th><th>Sản phẩm</th><th>Giá tham khảo</th></tr>
       <tr><td><b>HumeAI</b> (Octave 2)</td><td>Audio (TTS, có cảm xúc)</td><td>~$7.60 / 1 triệu ký tự (API) · free 10k ký tự/tháng · ~½ giá ElevenLabs</td></tr>
+      <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>~$10 / 1 triệu ký tự input (API) · tích hợp sẵn qua proxy LiteLLM nội bộ</td></tr>
       <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
     </table>
     <div class="note">Giá tham khảo (6/2026) — kiểm tra lại trên trang chính thức:
