@@ -52,6 +52,11 @@ for e in ENG_ALL:
 for e in ENG_ALL:
     for s in ("base", "2s", "3s", "4s", "5s", "6s"):
         cp(f"outputs_dur/{e}_{s}.wav", f"dur_{e}_{s}.wav", "audio")
+# demo ép speed cho ĐOẠN NHIỀU CÂU (course intro 4 câu)
+for _src, _dst in [("multi_kokoro_sp1.3", "multi_sp13"), ("multi_kokoro_sp1.0", "multi_sp10"),
+                   ("multi_kokoro_sp0.8", "multi_sp08"), ("multi_total_10s", "multi_total_10s"),
+                   ("multi_total_12s", "multi_total_12s"), ("multi_total_20s", "multi_total_20s")]:
+    cp(f"outputs_dur/{_src}.wav", f"{_dst}.wav", "audio")
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
@@ -174,6 +179,26 @@ for e in ENG_ALL:
         _ad = _wd(os.path.join(ROOT, "outputs_dur", f"{e}_{_t}.wav"))
         _clips += _durclip(e, _t, f"Ép {_t[:-1]} giây → {_ad:.2f}s")
     _dur_blocks += f'<div class="dureng"><div class="durname">{LABEL[e]}</div><div class="durflex">{_clips}</div></div>'
+
+
+def _mc(fn, lab):
+    return (f'<div class="durclip"><div class="durlab">{lab}</div>'
+            f'<audio controls preload="none" src="audio/{fn}"></audio></div>')
+
+
+_multi_block = (
+    '<div class="durname">Cách 1 — đổi tốc độ khi sinh (native, tự nhiên nhất, ~xấp xỉ giây):</div>'
+    '<div class="durflex">'
+    + _mc("multi_sp13.wav", "speed 1.3 → 12.8s")
+    + _mc("multi_sp10.wav", "speed 1.0 (gốc) → 15.5s")
+    + _mc("multi_sp08.wav", "speed 0.8 → 19.7s")
+    + '</div>'
+    '<div class="durname" style="margin-top:12px">Cách 2 — ép TỔNG đoạn về đúng N giây (atempo, mọi engine):</div>'
+    '<div class="durflex">'
+    + _mc("multi_total_10s.wav", "ép tổng 10s → 9.99s")
+    + _mc("multi_total_12s.wav", "ép tổng 12s → 11.99s")
+    + _mc("multi_total_20s.wav", "ép tổng 20s → 19.97s")
+    + '</div>')
 
 _DURCTRL = [("F5-TTS", "🟡 Có (tricky)", "<code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code>"),
             ("Kokoro", "🟡 Qua tốc độ", "tham số <code>speed</code> (hệ số tempo)"),
@@ -342,6 +367,11 @@ HTML = f"""<!doctype html>
     {_dur_blocks}
   </div>
   {details("📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)", _durctrl_tbl)}
+  <div class="card">
+    <div class="sub"><b>Đoạn nhiều câu</b> (course intro, 4 câu) — ép tốc độ / thời lượng cho cả đoạn:</div>
+    {_multi_block}
+    <div class="note">Cách 1 giữ chất lượng tốt nhất (xấp xỉ giây); Cách 2 đúng giây tuyệt đối nhưng kéo giãn cả đoạn (kể cả khoảng lặng). Cần TỪNG CÂU đúng giây (khớp slide/SRT) → tách per-câu.</div>
+  </div>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="card">
