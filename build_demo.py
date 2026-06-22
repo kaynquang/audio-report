@@ -44,6 +44,7 @@ for e in ENG:
 cp("outputs/litellm.wav", "s1_litellm.wav", "audio")
 for _emo in ("neutral", "happy", "sad", "formal"):   # Gemini điều khiển cảm xúc bằng prompt
     cp(f"outputs_dur/gemini_{_emo}.wav", f"gemini_{_emo}.wav", "audio")
+cp("outputs_dur/gemini_dialogue.wav", "gemini_dialogue.wav", "audio")   # multi-speaker
 # phụ đề .srt cho course intro + demo điều khiển thời lượng (gồm cả Gemini)
 os.makedirs(os.path.join(D, "srt"), exist_ok=True)
 for e in ENG_ALL:
@@ -418,6 +419,9 @@ HTML = f"""<!doctype html>
       {_mc("gemini_formal.wav", "Trang trọng (formal)")}
     </div>
     <div class="note">Cách điều khiển của Gemini: ghi mô tả vào text (vd <code>"Say cheerfully: ..."</code>) — model đổi cách đọc, KHÔNG đọc câu lệnh ra. Đã test: tham số <code>speed</code> và <code>temperature</code> qua proxy <b>bị bỏ qua</b> → Gemini chỉ chỉnh được <b>giọng (voice ~30) + cảm xúc/phong cách (prompt)</b>; muốn đổi tốc độ phải dùng atempo hậu kỳ.</div>
+    <div class="sub" style="margin-top:14px"><b>Gemini — multi-speaker (2 giọng trong 1 lần sinh)</b> ✅ chạy được qua proxy:</div>
+    <div class="durflex">{_mc("gemini_dialogue.wav", "Host: Kore (~260Hz) + Guest: Puck (~129Hz)")}</div>
+    <div class="note">Hội thoại 2 người, mỗi người 1 giọng riêng — gọi qua <code>/v1/chat/completions</code> + <code>extra_body.generationConfig.speechConfig.multiSpeakerVoiceConfig</code> (format <code>pcm16</code>). Gemini hỗ trợ tối đa 2 người nói; 5 engine open-source không có (phải ghép thủ công).</div>
     <div class="note">Giá tham khảo (6/2026) — kiểm tra lại trên trang chính thức:
       <a href="https://www.hume.ai/pricing" target="_blank">hume.ai/pricing</a> ·
       <a href="https://knowlify.com" target="_blank">knowlify.com</a>.
