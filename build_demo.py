@@ -274,7 +274,7 @@ NAVJS = """<script>
   hs.forEach(function(h,i){
     h.id='s'+(i+1);
     var li=document.createElement('li'), a=document.createElement('a');
-    a.href='#s'+(i+1); a.textContent=h.textContent; li.appendChild(a); ol.appendChild(li);
+    a.href='#s'+(i+1); a.textContent=h.textContent.replace(/^\\s*\\d+\\)\\s*/,''); li.appendChild(a); ol.appendChild(li);
   });
   toc.appendChild(ol);
 })();
@@ -355,9 +355,11 @@ HTML = f"""<!doctype html>
 <main>
 
   <div class="callout key"><div class="ico">📌</div><div>
-    <b>TL;DR.</b> Research so sánh <b>6 engine TTS</b> (5 open-source + Gemini) cho Athena, cùng kịch bản.
-    Tự nhiên nhất: <b>Gemini ≈ StyleTTS2 ≈ IndexTTS2</b> · clone giống nhất: <b>IndexTTS2</b> · nhanh/nhẹ nhất: <b>Kokoro</b>.
-    Cuộn xuống để <b>nghe trực tiếp</b>, xem biểu đồ, và cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).
+    <b>TL;DR</b> — Research so sánh <b>6 engine TTS</b> (5 open-source + Gemini) cho Athena, trên cùng kịch bản.<br>
+    • Tự nhiên nhất: <b>Gemini ≈ StyleTTS2 ≈ IndexTTS2</b><br>
+    • Clone giống giọng nhất: <b>IndexTTS2</b><br>
+    • Nhanh / nhẹ nhất: <b>Kokoro</b><br>
+    <span class="sub" style="margin:0">Cuộn xuống để nghe trực tiếp, xem biểu đồ & cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).</span>
   </div></div>
 
   <div class="toc"><div class="toc-h">MỤC LỤC</div><div id="toc"></div></div>
