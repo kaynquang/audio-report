@@ -116,7 +116,7 @@
     <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
-  <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
+  <h2 data-toc="Nghe thử">1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
     <b>→ Rút ra:</b> Gemini / StyleTTS2 / IndexTTS2 mượt & tự nhiên; F5 lộ wobble; Kokoro rõ nhưng hơi “máy”.</div></div>
   <div class="card">
@@ -157,7 +157,7 @@ Honestly, I did not expect the final results to be this good.
 Thank you for listening, and I hope you have a wonderful day.</pre><figure><img src="img/compare_scripts_waveforms.png" alt="Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2."/>
       <figcaption>Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.</figcaption></figure></div></details>
 
-  <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <h2 data-toc="Độ tự nhiên">2) Độ tự nhiên — so với giọng người thật</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> chấm điểm khách quan (ngữ điệu, cao độ, năng lượng…) và so trực tiếp với giọng người.
     <b>→ Rút ra:</b> Gemini điểm cao nhất (90); nhưng metric phạt giọng người (dao động rộng) → phải nhìn số thô + nghe, đừng tin mỗi điểm tổng.</div></div>
   <details class="card"><summary>📊 Số liệu &amp; biểu đồ độ tự nhiên (bấm để mở)</summary><div class="dbody"><div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div><table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>90.2</td></tr>
@@ -169,7 +169,7 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>F5-TTS</td><td>35.4</td></tr></table><figure><img src="img/compare_to_original.png" alt="Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật."/>
       <figcaption>Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật.</figcaption></figure></div></details>
 
-  <h2>3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
+  <h2 data-toc="Clone giọng">3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> test nhân bản 1 giọng cụ thể từ clip mẫu; dùng 2 kịch bản (ngắn / đúng thoại ref) để kiểm độ tin cậy phép đo.
     <b>→ Rút ra:</b> IndexTTS2 clone giống nhất; câu dài & trùng nội dung ref cho số ổn định, câu ngắn thì nhiễu.</div></div>
   <div class="card">
@@ -206,7 +206,7 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <figcaption>Độ giống giọng ref neil — kịch bản B (đọc cùng câu). Trục dọc: cosine (0–1).</figcaption></figure><figure><img src="img/compare_refline_waveforms.png" alt="Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ."/>
       <figcaption>Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure></div></details>
 
-  <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
+  <h2 data-toc="Tổng hợp">4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> gộp 2 trục (giống giọng × tự nhiên) + tốc độ để chọn engine theo nhu cầu.
     <b>→ Rút ra:</b> IndexTTS2 cân bằng nhất; Gemini tự nhiên nhưng không giống (preset); F5 giống nhưng kém tự nhiên; Kokoro nhanh nhất.</div></div>
   <details class="card"><summary>📊 Biểu đồ đánh đổi &amp; thời gian tạo (bấm để mở)</summary><div class="dbody"><figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng."/>
@@ -216,7 +216,7 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>IndexTTS2</td><td>68.8</td></tr>
 <tr><td>F5-TTS</td><td>253.7</td></tr></table></div></details>
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
+  <h2 data-toc="Demo ứng dụng">5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> thử ứng dụng thật — clone giọng đọc intro khoá học + xuất phụ đề <code>.srt</code> khớp giọng cho video.
     <b>→ Rút ra:</b> clone đọc intro ổn; <code>.srt</code> chuẩn hoá cue khớp tốt; giọng rõ (Kokoro/Index) cho phụ đề chính xác, F5 sai chữ.</div></div>
   <div class="card">
@@ -234,7 +234,7 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
   </div>
   <details class="card"><summary>📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr><tr><td>Kokoro</td><td>7</td><td>4.8%</td></tr><tr><td>Chatterbox</td><td>7</td><td>4.8%</td></tr><tr><td>F5-TTS</td><td>7</td><td>14.3%</td></tr><tr><td>StyleTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>IndexTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>7</td><td>9.5%</td></tr></table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div></div></details>
 
-  <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <h2 data-toc="Điều khiển thời lượng">6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> kiểm tra có ép được “câu/đoạn = N giây” để khớp video/slide không.
     <b>→ Rút ra:</b> ép được, 3 cách — native speed (xấp xỉ, tự nhiên) · atempo (đúng tổng) · per-câu (khớp từng dòng, chuẩn nhất cho slide).</div></div>
   <div class="card">
@@ -267,7 +267,7 @@ Let&#x27;s get started.
 </pre>
   </div>
 
-  <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <h2 data-toc="Dịch vụ thương mại">7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> so engine open-source với dịch vụ trả phí (Gemini/HumeAI/Knowlify) về chất lượng/giá; test sâu khả năng điều khiển của Gemini.
     <b>→ Rút ra:</b> Gemini chỉnh được giọng + cảm xúc (prompt) + multi-speaker 2 giọng; <code>speed</code>/<code>temperature</code> bị bỏ qua; chi phí research chỉ vài cent.</div></div>
   <div class="card">
@@ -305,7 +305,7 @@ Let&#x27;s get started.
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2>8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
+  <h2 data-toc="Hướng dẫn Gemini">8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> để team tự tích hợp Gemini TTS qua proxy LiteLLM mà không phải mò.
     <b>→ Rút ra:</b> 3 cách dùng (đơn giọng · cảm xúc · multi-speaker) + các bẫy đã gặp (SSL, Cloudflare, pcm16, speed/temp bị bỏ qua) + giá.</div></div>
   <div class="card">
@@ -357,7 +357,7 @@ pcm = np.frombuffer(base64.b64decode(resp[&quot;choices&quot;][0][&quot;message&
 sf.write(&quot;dialogue.wav&quot;, pcm, 24000)</pre><p>Giới hạn: <b>tối đa 2 người nói</b>.</p><h3>4. Giọng (voice)</h3><p>~<b>30 giọng preset</b>, vd: <code>Kore</code> (firm), <code>Puck</code> (upbeat), <code>Zephyr</code> (bright), <code>Enceladus</code> (breathy), <code>Sulafat</code> (warm)… Chọn qua <code>voice</code> (Cách 1/2) hoặc <code>voiceName</code> (Cách 3). <b>Không clone</b> giọng tùy ý.</p><h3>5. Lưu ý quan trọng (đã test thực tế)</h3><ul><li><b>SSL:</b> Python.org trên macOS thiếu CA → dùng <code>certifi</code> (<code>cafile=certifi.where()</code>), nếu không sẽ <code>CERTIFICATE_VERIFY_FAILED</code>.</li><li><b>Cloudflare:</b> thiếu User-Agent → bị chặn <code>403 error 1010</code>. Thêm <code>User-Agent: Mozilla/5.0</code>.</li><li><b>Format:</b> <code>/audio/speech</code> nhận <code>wav</code>; <code>/v1/chat/completions</code> <b>chỉ nhận <code>pcm16</code></b> (trả base64).</li><li><b><code>speed</code> và <code>temperature</code>: BỊ BỎ QUA</b> qua proxy (output không đổi). Muốn đổi tốc độ → time-stretch hậu kỳ (ffmpeg <code>atempo</code>).</li><li>Output: PCM 24 kHz.</li></ul><h3>6. Chi phí</h3><table><tr><th>Model</th><th>Input (text)</th><th>Output (audio)</th></tr><tr><td>gemini-2.5-pro-preview-tts</td><td>$1.00 / 1M token</td><td><b>$20.00 / 1M token</b></td></tr><tr><td>gemini-2.5-flash-preview-tts</td><td>$0.50 / 1M token</td><td>$10.00 / 1M token</td></tr></table><p>Audio output là phần tốn chính. Ví dụ research này: ~789 ký tự input → 56s audio ≈ vài cent.</p><h3>7. Nguồn (cross-check)</h3><ul><li>Gemini speech generation: https://ai.google.dev/gemini-api/docs/speech-generation</li><li>Gemini API pricing: https://ai.google.dev/gemini-api/docs/pricing</li><li>LiteLLM text-to-speech: https://docs.litellm.ai/docs/text_to_speech</li><li>LiteLLM repo: https://github.com/BerriAI/litellm</li><li>Proxy (Swagger UI): https://litellm.athena.tools/</li></ul>
   </div>
 
-  <h2>9) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Báo cáo PDF">9) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>
@@ -393,10 +393,11 @@ var CUES={"kokoro": [[0.0, 2.62, "Welcome to this Harvard introductory course."]
   hs.forEach(function(h,i){
     h.id='s'+(i+1);
     var txt=h.textContent.replace(/^\s*\d+\)\s*/,'');
-    [[side,sideOl,true],[inl,inlOl,false]].forEach(function(p){
+    var short=h.getAttribute('data-toc')||txt;
+    [[side,sideOl,true,short],[inl,inlOl,false,txt]].forEach(function(p){
       if(!p[0]) return;
       var li=document.createElement('li'), a=document.createElement('a');
-      a.href='#s'+(i+1); a.textContent=txt; li.appendChild(a); p[1].appendChild(li);
+      a.href='#s'+(i+1); a.textContent=p[3]; li.appendChild(a); p[1].appendChild(li);
       if(p[2]) amap['s'+(i+1)]=a;
     });
   });

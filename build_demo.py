@@ -320,10 +320,11 @@ NAVJS = """<script>
   hs.forEach(function(h,i){
     h.id='s'+(i+1);
     var txt=h.textContent.replace(/^\\s*\\d+\\)\\s*/,'');
-    [[side,sideOl,true],[inl,inlOl,false]].forEach(function(p){
+    var short=h.getAttribute('data-toc')||txt;
+    [[side,sideOl,true,short],[inl,inlOl,false,txt]].forEach(function(p){
       if(!p[0]) return;
       var li=document.createElement('li'), a=document.createElement('a');
-      a.href='#s'+(i+1); a.textContent=txt; li.appendChild(a); p[1].appendChild(li);
+      a.href='#s'+(i+1); a.textContent=p[3]; li.appendChild(a); p[1].appendChild(li);
       if(p[2]) amap['s'+(i+1)]=a;
     });
   });
@@ -459,7 +460,7 @@ HTML = f"""<!doctype html>
     <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
   </div>
 
-  <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
+  <h2 data-toc="Nghe thử">1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
     <b>→ Rút ra:</b> Gemini / StyleTTS2 / IndexTTS2 mượt & tự nhiên; F5 lộ wobble; Kokoro rõ nhưng hơi “máy”.</div></div>
   <div class="card">
@@ -472,12 +473,12 @@ HTML = f"""<!doctype html>
   </div>
   {details("📊 Biểu đồ — sóng & cao độ (bấm để mở)", imgs1)}
 
-  <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <h2 data-toc="Độ tự nhiên">2) Độ tự nhiên — so với giọng người thật</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> chấm điểm khách quan (ngữ điệu, cao độ, năng lượng…) và so trực tiếp với giọng người.
     <b>→ Rút ra:</b> Gemini điểm cao nhất (90); nhưng metric phạt giọng người (dao động rộng) → phải nhìn số thô + nghe, đừng tin mỗi điểm tổng.</div></div>
   {details("📊 Số liệu & biểu đồ độ tự nhiên (bấm để mở)", nat_block)}
 
-  <h2>3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
+  <h2 data-toc="Clone giọng">3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> test nhân bản 1 giọng cụ thể từ clip mẫu; dùng 2 kịch bản (ngắn / đúng thoại ref) để kiểm độ tin cậy phép đo.
     <b>→ Rút ra:</b> IndexTTS2 clone giống nhất; câu dài & trùng nội dung ref cho số ổn định, câu ngắn thì nhiễu.</div></div>
   <div class="card">
@@ -490,12 +491,12 @@ HTML = f"""<!doctype html>
   </div>
   {details("📊 Bảng độ giống (2 kịch bản) + biểu đồ (bấm để mở)", clone_block)}
 
-  <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
+  <h2 data-toc="Tổng hợp">4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> gộp 2 trục (giống giọng × tự nhiên) + tốc độ để chọn engine theo nhu cầu.
     <b>→ Rút ra:</b> IndexTTS2 cân bằng nhất; Gemini tự nhiên nhưng không giống (preset); F5 giống nhưng kém tự nhiên; Kokoro nhanh nhất.</div></div>
   {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
-  <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
+  <h2 data-toc="Demo ứng dụng">5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> thử ứng dụng thật — clone giọng đọc intro khoá học + xuất phụ đề <code>.srt</code> khớp giọng cho video.
     <b>→ Rút ra:</b> clone đọc intro ổn; <code>.srt</code> chuẩn hoá cue khớp tốt; giọng rõ (Kokoro/Index) cho phụ đề chính xác, F5 sai chữ.</div></div>
   <div class="card">
@@ -511,7 +512,7 @@ HTML = f"""<!doctype html>
   </div>
   {details("📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)", _course_tbl)}
 
-  <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <h2 data-toc="Điều khiển thời lượng">6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> kiểm tra có ép được “câu/đoạn = N giây” để khớp video/slide không.
     <b>→ Rút ra:</b> ép được, 3 cách — native speed (xấp xỉ, tự nhiên) · atempo (đúng tổng) · per-câu (khớp từng dòng, chuẩn nhất cho slide).</div></div>
   <div class="card">
@@ -529,7 +530,7 @@ HTML = f"""<!doctype html>
     <pre class="script">{html.escape(_perline_srt)}</pre>
   </div>
 
-  <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <h2 data-toc="Dịch vụ thương mại">7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> so engine open-source với dịch vụ trả phí (Gemini/HumeAI/Knowlify) về chất lượng/giá; test sâu khả năng điều khiển của Gemini.
     <b>→ Rút ra:</b> Gemini chỉnh được giọng + cảm xúc (prompt) + multi-speaker 2 giọng; <code>speed</code>/<code>temperature</code> bị bỏ qua; chi phí research chỉ vài cent.</div></div>
   <div class="card">
@@ -563,14 +564,14 @@ HTML = f"""<!doctype html>
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2>8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
+  <h2 data-toc="Hướng dẫn Gemini">8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> để team tự tích hợp Gemini TTS qua proxy LiteLLM mà không phải mò.
     <b>→ Rút ra:</b> 3 cách dùng (đơn giọng · cảm xúc · multi-speaker) + các bẫy đã gặp (SSL, Cloudflare, pcm16, speed/temp bị bỏ qua) + giá.</div></div>
   <div class="card">
     {DOC_HTML}
   </div>
 
-  <h2>9) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Báo cáo PDF">9) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
