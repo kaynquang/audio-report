@@ -54,6 +54,17 @@
 <main>
 
   <div class="card">
+    <b>ℹ️ Về research này</b>
+    <table>
+      <tr><td class="lbl">Lý do</td><td>Athena cần chọn engine TTS cho voiceover / video course / nhân bản giọng — so sánh khách quan thay vì chọn cảm tính, và có tài liệu tích hợp.</td></tr>
+      <tr><td class="lbl">Phạm vi</td><td>6 engine (5 open-source + Gemini commercial), cùng kịch bản; đo độ tự nhiên · clone · tốc độ · chi phí · điều khiển (thời lượng/cảm xúc/multi-speaker) · xuất .srt.</td></tr>
+      <tr><td class="lbl">Thời gian</td><td>15–22/06/2026 (cập nhật 24/06/2026)</td></tr>
+      <tr><td class="lbl">Version</td><td>Kokoro 0.9.4 · Chatterbox 0.1.7 · F5-TTS 1.1.20 · IndexTTS2 2.0.0 · StyleTTS2 (yl4579/LibriTTS) · Gemini 2.5 Pro Preview TTS</td></tr>
+      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="https://github.com/kaynquang/audio-report/blob/main/docs/gemini_litellm.md" target="_blank">docs/gemini_litellm.md</a> (cài & xài qua LiteLLM)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
     <b>Overview</b> — Thử nghiệm 5 engine TTS mã nguồn mở: đánh giá (1) độ tự nhiên,
     (2) khả năng <b>nhân bản giọng</b> từ clip mẫu, (3) tốc độ tạo. Bảng dưới: cơ chế,
     dung lượng model (tải về), và link tới repo gốc của từng engine.
@@ -224,7 +235,7 @@ Let&#x27;s get started.
     <table style="margin-top:14px">
       <tr><th>Dịch vụ</th><th>Sản phẩm</th><th>Giá tham khảo</th></tr>
       <tr><td><b>HumeAI</b> (Octave 2)</td><td>Audio (TTS, có cảm xúc)</td><td>~$7.60 / 1 triệu ký tự (API) · free 10k ký tự/tháng · ~½ giá ElevenLabs</td></tr>
-      <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>~$10 / 1 triệu ký tự input (API) · tích hợp sẵn qua proxy LiteLLM nội bộ</td></tr>
+      <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>$1 /1M token input + <b>$20 /1M token audio output</b> · qua proxy LiteLLM nội bộ</td></tr>
       <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
     </table>
     <div class="sub" style="margin-top:14px"><b>Gemini — điều khiển cảm xúc bằng prompt</b> (cùng câu, chỉ đổi mô tả style trong text):</div>
