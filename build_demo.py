@@ -312,15 +312,32 @@ DOC_HTML = md_to_html(_read("../docs/gemini_litellm.md") or
 
 NAVJS = """<script>
 (function(){
-  var toc=document.getElementById('toc'); if(!toc) return;
   var hs=document.querySelectorAll('main h2');
-  var ol=document.createElement('ol'); ol.className='toclist';
+  var side=document.getElementById('toc-side'), inl=document.getElementById('toc');
+  var sideOl=document.createElement('ol'); sideOl.className='toclist-side';
+  var inlOl=document.createElement('ol'); inlOl.className='toclist';
+  var amap={};
   hs.forEach(function(h,i){
     h.id='s'+(i+1);
-    var li=document.createElement('li'), a=document.createElement('a');
-    a.href='#s'+(i+1); a.textContent=h.textContent.replace(/^\\s*\\d+\\)\\s*/,''); li.appendChild(a); ol.appendChild(li);
+    var txt=h.textContent.replace(/^\\s*\\d+\\)\\s*/,'');
+    [[side,sideOl,true],[inl,inlOl,false]].forEach(function(p){
+      if(!p[0]) return;
+      var li=document.createElement('li'), a=document.createElement('a');
+      a.href='#s'+(i+1); a.textContent=txt; li.appendChild(a); p[1].appendChild(li);
+      if(p[2]) amap['s'+(i+1)]=a;
+    });
   });
-  toc.appendChild(ol);
+  if(side) side.appendChild(sideOl);
+  if(inl) inl.appendChild(inlOl);
+  if(Object.keys(amap).length){
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){
+        for(var k in amap) amap[k].classList.remove('active');
+        if(amap[e.target.id]) amap[e.target.id].classList.add('active');
+      }});
+    },{rootMargin:'0px 0px -75% 0px'});
+    hs.forEach(function(h){obs.observe(h)});
+  }
 })();
 </script>"""
 
@@ -355,6 +372,17 @@ HTML = f"""<!doctype html>
   ol.toclist {{ margin:0; padding-left:20px; columns:2; column-gap:28px; }}
   ol.toclist li {{ margin:4px 0; font-size:14px; }}
   ol.toclist a {{ color:var(--fg); }}
+  .sidebar {{ position:fixed; top:24px; width:210px; max-height:calc(100vh - 48px); overflow-y:auto;
+    left:max(16px, calc(50% - 664px)); padding:6px 0; }}
+  .sidebar .toc-h {{ padding-left:10px; margin-bottom:8px; }}
+  ol.toclist-side {{ list-style:none; margin:0; padding:0; }}
+  ol.toclist-side li {{ margin:1px 0; }}
+  ol.toclist-side a {{ display:block; padding:5px 10px; border-radius:6px; color:var(--mut);
+    font-size:13px; line-height:1.35; }}
+  ol.toclist-side a:hover {{ background:var(--soft); color:var(--fg); }}
+  ol.toclist-side a.active {{ background:#eef5fd; color:var(--acc); font-weight:600; }}
+  @media (max-width:1339px) {{ .sidebar {{ display:none; }} }}
+  @media (min-width:1340px) {{ .toc {{ display:none; }} }}
   table {{ width:100%; border-collapse:collapse; margin:10px 0; font-size:14.5px; }}
   td,th {{ padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }}
   th {{ color:var(--mut); font-weight:500; font-size:13px; }}
@@ -398,6 +426,7 @@ HTML = f"""<!doctype html>
   @media (max-width:720px) {{ .grid2 {{ grid-template-columns:1fr; }} ol.toclist {{ columns:1; }} audio {{ width:100%; }} td.lbl{{width:auto;}} }}
 </style></head>
 <body>
+<nav class="sidebar"><div class="toc-h">MỤC LỤC</div><div id="toc-side"></div></nav>
 <main>
 
   <div class="callout key"><div class="ico">📌</div><div>
