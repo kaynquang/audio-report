@@ -585,6 +585,11 @@ HTML = f"""<!doctype html>
 </body></html>
 """
 
+# bỏ hết icon/emoji (giữ nguyên ký tự nội dung như → ≈ · —)
+for _ic in ("📌", "ℹ️", "💡", "📊", "📋", "⭐", "✅", "❌", "🟡", "⬇️", "⬇", "🎙️", "🧭"):
+    HTML = HTML.replace(_ic + " ", "").replace(_ic, "")
+HTML = HTML.replace('<div class="ico"></div>', '').replace('<div class="ico"></div>', '')
+
 with open(os.path.join(D, "index.html"), "w", encoding="utf-8") as f:
     f.write(HTML)
 
