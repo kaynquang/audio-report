@@ -266,6 +266,19 @@ _KJS_BODY = """
 })();
 </script>"""
 KJS = "<script>\nvar CUES=" + json.dumps(CUES, ensure_ascii=False) + ";\n" + _KJS_BODY
+NAVJS = """<script>
+(function(){
+  var toc=document.getElementById('toc'); if(!toc) return;
+  var hs=document.querySelectorAll('main h2');
+  var ol=document.createElement('ol'); ol.className='toclist';
+  hs.forEach(function(h,i){
+    h.id='s'+(i+1);
+    var li=document.createElement('li'), a=document.createElement('a');
+    a.href='#s'+(i+1); a.textContent=h.textContent; li.appendChild(a); ol.appendChild(li);
+  });
+  toc.appendChild(ol);
+})();
+</script>"""
 
 synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.")
                + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
@@ -276,55 +289,78 @@ HTML = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Athena TTS — Demo</title>
 <style>
-  :root {{ --bg:#f6f7f9; --card:#ffffff; --fg:#1a1d21; --mut:#5c6670; --acc:#1a73e8; --line:#e3e6ea; }}
+  :root {{ --bg:#ffffff; --card:#ffffff; --fg:#37352f; --mut:#787774; --acc:#2383e2;
+           --line:#e9e9e7; --callout:#f7f6f3; --soft:#fbfbfa; --code:#f1f0ee; }}
   * {{ box-sizing:border-box; }}
-  body {{ margin:0; background:var(--bg); color:var(--fg);
-    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }}
-  header {{ padding:32px 24px; background:linear-gradient(135deg,#eef3fb,#f6f7f9); border-bottom:1px solid var(--line); }}
-  h1 {{ margin:0 0 6px; font-size:26px; }}
-  h2 {{ margin:34px 0 12px; font-size:20px; border-left:3px solid var(--acc); padding-left:10px; }}
-  .sub {{ color:var(--mut); }}
-  main {{ max-width:1000px; margin:0 auto; padding:28px 24px 60px; }}
-  .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; box-shadow:0 1px 3px rgba(20,30,50,.05); }}
-  table {{ width:100%; border-collapse:collapse; margin:8px 0; }}
-  td,th {{ padding:7px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }}
-  th {{ color:var(--mut); font-weight:600; }}
+  body {{ margin:0; background:var(--bg); color:var(--fg); -webkit-font-smoothing:antialiased;
+    font:16px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif; }}
+  h1 {{ margin:0 0 6px; font-size:30px; font-weight:700; letter-spacing:-.01em; }}
+  h2 {{ font-size:23px; font-weight:600; line-height:1.3; margin:48px 0 4px;
+    padding-top:22px; border-top:1px solid var(--line); scroll-margin-top:14px; }}
+  .sub {{ color:var(--mut); font-size:15px; margin:6px 0 12px; }}
+  main {{ max-width:860px; margin:0 auto; padding:52px 24px 90px; }}
+  .card {{ background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin:14px 0; }}
+  .callout {{ display:flex; gap:12px; align-items:flex-start; background:var(--callout);
+    border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:16px 0; font-size:15px; }}
+  .callout .ico {{ font-size:18px; line-height:1.5; flex:none; }}
+  .callout.key {{ background:#eef5fd; border-color:#cfe3fa; }}
+  .toc {{ border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin:16px 0; background:var(--soft); }}
+  .toc-h {{ font-weight:600; font-size:13px; color:var(--mut); margin-bottom:6px; }}
+  ol.toclist {{ margin:0; padding-left:20px; columns:2; column-gap:28px; }}
+  ol.toclist li {{ margin:4px 0; font-size:14px; }}
+  ol.toclist a {{ color:var(--fg); }}
+  table {{ width:100%; border-collapse:collapse; margin:10px 0; font-size:14.5px; }}
+  td,th {{ padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }}
+  th {{ color:var(--mut); font-weight:500; font-size:13px; }}
+  tr:last-child td {{ border-bottom:none; }}
   td.lbl {{ width:190px; font-weight:600; }}
   td.note {{ color:var(--mut); font-size:13px; }}
   audio {{ width:320px; height:34px; }}
   .dureng {{ margin:14px 0; padding-bottom:12px; border-bottom:1px solid var(--line); }}
   .durname {{ font-weight:700; margin-bottom:7px; }}
   .durflex {{ display:flex; flex-wrap:wrap; gap:10px; }}
-  .durclip {{ background:#fafbfc; border:1px solid var(--line); border-radius:8px; padding:6px 9px; }}
+  .durclip {{ background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:6px 9px; }}
   .durlab {{ font-size:12px; color:var(--mut); margin-bottom:4px; }}
   .durclip audio {{ width:178px; height:30px; }}
   video {{ width:100%; max-width:640px; border-radius:10px; border:1px solid var(--line); display:block; }}
   figure {{ margin:14px 0; }}
   img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#fff; }}
   figcaption {{ color:var(--mut); font-size:13px; margin-top:6px; }}
-  details.card > summary {{ cursor:pointer; font-weight:600; list-style:none; user-select:none; }}
+  details.card {{ background:var(--soft); }}
+  details.card > summary {{ cursor:pointer; font-weight:500; list-style:none; user-select:none; }}
   details.card > summary::-webkit-details-marker {{ display:none; }}
-  details.card > summary::before {{ content:"▸ "; color:var(--acc); font-weight:700; }}
-  details.card[open] > summary::before {{ content:"▾ "; }}
+  details.card > summary::before {{ content:"▸"; color:var(--mut); display:inline-block; width:1.3em; }}
+  details.card[open] > summary::before {{ content:"▾"; }}
   details.card > .dbody {{ margin-top:14px; }}
   .krow {{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0; }}
   #ksel {{ padding:6px 10px; border:1px solid var(--line); border-radius:8px; font-size:14px; background:#fff; }}
-  #kbox {{ max-height:230px; overflow-y:auto; border:1px solid var(--line); border-radius:10px;
-    padding:10px 12px; background:#fafbfc; line-height:1.7; }}
+  #kbox {{ max-height:230px; overflow-y:auto; border:1px solid var(--line); border-radius:8px;
+    padding:10px 12px; background:var(--soft); line-height:1.7; }}
   .cue {{ padding:5px 9px; color:var(--mut); border-radius:6px; transition:background .12s,color .12s; }}
-  .cue.on {{ color:var(--fg); background:#e7f0fe; font-weight:700; }}
-  a {{ color:var(--acc); }}
-  .pill {{ display:inline-block; background:#eef3fb; color:var(--acc); border:1px solid #d6e2f5;
+  .cue.on {{ color:var(--fg); background:#eef5fd; font-weight:600; }}
+  a {{ color:var(--acc); text-decoration:none; }}
+  a:hover {{ text-decoration:underline; }}
+  .pill {{ display:inline-block; background:var(--soft); color:var(--mut); border:1px solid var(--line);
     border-radius:999px; padding:2px 10px; font-size:12px; margin:2px 4px 2px 0; }}
-  code {{ background:#eef1f5; padding:1px 6px; border-radius:5px; }}
-  pre.script {{ background:#f3f5f8; border:1px solid var(--line); border-radius:8px;
-    padding:10px 13px; font-size:13px; line-height:1.55; white-space:pre-wrap;
-    margin:8px 0; color:#2a2f36; font-family:Menlo,Consolas,monospace; }}
+  code {{ background:var(--code); padding:1.5px 5px; border-radius:4px; font-size:13.5px;
+    font-family:ui-monospace,Menlo,Consolas,monospace; }}
+  pre.script {{ background:var(--code); border:1px solid var(--line); border-radius:6px;
+    padding:12px 14px; font-size:13px; line-height:1.6; white-space:pre-wrap;
+    margin:10px 0; color:#37352f; font-family:ui-monospace,Menlo,Consolas,monospace; }}
+  .note {{ color:var(--mut); font-size:13.5px; margin:8px 0; }}
   .grid2 {{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }}
-  @media (max-width:720px) {{ .grid2 {{ grid-template-columns:1fr; }} audio {{ width:100%; }} td.lbl{{width:auto;}} }}
+  @media (max-width:720px) {{ .grid2 {{ grid-template-columns:1fr; }} ol.toclist {{ columns:1; }} audio {{ width:100%; }} td.lbl{{width:auto;}} }}
 </style></head>
 <body>
 <main>
+
+  <div class="callout key"><div class="ico">📌</div><div>
+    <b>TL;DR.</b> Research so sánh <b>6 engine TTS</b> (5 open-source + Gemini) cho Athena, cùng kịch bản.
+    Tự nhiên nhất: <b>Gemini ≈ StyleTTS2 ≈ IndexTTS2</b> · clone giống nhất: <b>IndexTTS2</b> · nhanh/nhẹ nhất: <b>Kokoro</b>.
+    Cuộn xuống để <b>nghe trực tiếp</b>, xem biểu đồ, và cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).
+  </div></div>
+
+  <div class="toc"><div class="toc-h">MỤC LỤC</div><div id="toc"></div></div>
 
   <div class="card">
     <b>ℹ️ Về research này</b>
@@ -449,6 +485,7 @@ HTML = f"""<!doctype html>
   <div class="sub" style="margin-top:30px">Tạo tự động bằng <code>build_demo.py</code>. Để gửi: zip cả thư mục <code>demo/</code>.</div>
 </main>
 {KJS}
+{NAVJS}
 </body></html>
 """
 
