@@ -266,6 +266,50 @@ _KJS_BODY = """
 })();
 </script>"""
 KJS = "<script>\nvar CUES=" + json.dumps(CUES, ensure_ascii=False) + ";\n" + _KJS_BODY
+def md_to_html(md):
+    def inline(t):
+        t = html.escape(t)
+        t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+        t = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", t)
+        t = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2" target="_blank">\1</a>', t)
+        return t
+    lines = md.split("\n"); out = []; i = 0; n = len(lines)
+    while i < n:
+        ln = lines[i]
+        if ln.startswith("```"):
+            buf = []; i += 1
+            while i < n and not lines[i].startswith("```"):
+                buf.append(lines[i]); i += 1
+            i += 1
+            out.append("<pre class='script'>" + html.escape("\n".join(buf)) + "</pre>"); continue
+        if ln.lstrip().startswith("|"):
+            tb = []
+            while i < n and lines[i].lstrip().startswith("|"):
+                tb.append(lines[i].strip().strip("|")); i += 1
+            rows = [[c.strip() for c in r.split("|")] for r in tb]
+            h = "<table><tr>" + "".join(f"<th>{inline(c)}</th>" for c in rows[0]) + "</tr>"
+            for r in rows[2:]:
+                h += "<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>"
+            out.append(h + "</table>"); continue
+        if ln.lstrip().startswith("- "):
+            items = []
+            while i < n and lines[i].lstrip().startswith("- "):
+                items.append(inline(lines[i].lstrip()[2:])); i += 1
+            out.append("<ul>" + "".join(f"<li>{x}</li>" for x in items) + "</ul>"); continue
+        if ln.startswith("### "): out.append(f"<h4>{inline(ln[4:])}</h4>")
+        elif ln.startswith("## "): out.append(f"<h3>{inline(ln[3:])}</h3>")
+        elif ln.startswith("# "): pass
+        elif ln.startswith("> "): out.append(f"<div class='note'>{inline(ln[2:])}</div>")
+        elif ln.strip() == "": pass
+        else: out.append(f"<p>{inline(ln)}</p>")
+        i += 1
+    return "".join(out)
+
+
+DOC_HTML = md_to_html(_read("../docs/gemini_litellm.md") or
+                      open(os.path.join(ROOT, "docs/gemini_litellm.md"), encoding="utf-8").read())
+
+
 NAVJS = """<script>
 (function(){
   var toc=document.getElementById('toc'); if(!toc) return;
@@ -297,6 +341,8 @@ HTML = f"""<!doctype html>
   h1 {{ margin:0 0 6px; font-size:30px; font-weight:700; letter-spacing:-.01em; }}
   h2 {{ font-size:23px; font-weight:600; line-height:1.3; margin:48px 0 4px;
     padding-top:22px; border-top:1px solid var(--line); scroll-margin-top:14px; }}
+  h3 {{ font-size:18px; font-weight:600; margin:24px 0 6px; }}
+  h4 {{ font-size:15px; font-weight:600; margin:18px 0 4px; color:var(--fg); }}
   .sub {{ color:var(--mut); font-size:15px; margin:6px 0 12px; }}
   main {{ max-width:860px; margin:0 auto; padding:52px 24px 90px; }}
   .card {{ background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin:14px 0; }}
@@ -371,7 +417,7 @@ HTML = f"""<!doctype html>
       <tr><td class="lbl">Phạm vi</td><td>6 engine (5 open-source + Gemini commercial), cùng kịch bản; đo độ tự nhiên · clone · tốc độ · chi phí · điều khiển (thời lượng/cảm xúc/multi-speaker) · xuất .srt.</td></tr>
       <tr><td class="lbl">Thời gian</td><td>15–22/06/2026 (cập nhật 24/06/2026)</td></tr>
       <tr><td class="lbl">Version</td><td>Kokoro 0.9.4 · Chatterbox 0.1.7 · F5-TTS 1.1.20 · IndexTTS2 2.0.0 · StyleTTS2 (yl4579/LibriTTS) · Gemini 2.5 Pro Preview TTS</td></tr>
-      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="https://github.com/kaynquang/audio-report/blob/main/docs/gemini_litellm.md" target="_blank">docs/gemini_litellm.md</a> (cài & xài qua LiteLLM)</td></tr>
+      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="#s8">Mục 8 — Hướng dẫn cài &amp; xài Gemini qua LiteLLM</a> (ngay trong trang)</td></tr>
     </table>
   </div>
 
@@ -488,7 +534,14 @@ HTML = f"""<!doctype html>
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2>8) Báo cáo PDF đầy đủ</h2>
+  <h2>8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> để team tự tích hợp Gemini TTS qua proxy LiteLLM mà không phải mò.
+    <b>→ Rút ra:</b> 3 cách dùng (đơn giọng · cảm xúc · multi-speaker) + các bẫy đã gặp (SSL, Cloudflare, pcm16, speed/temp bị bỏ qua) + giá.</div></div>
+  <div class="card">
+    {DOC_HTML}
+  </div>
+
+  <h2>9) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
