@@ -374,9 +374,7 @@ HTML = f"""<!doctype html>
   </div>
 
   <div class="card">
-    <b>Overview</b> — Thử nghiệm 5 engine TTS mã nguồn mở: đánh giá (1) độ tự nhiên,
-    (2) khả năng <b>nhân bản giọng</b> từ clip mẫu, (3) tốc độ tạo. Bảng dưới: cơ chế,
-    dung lượng model (tải về), và link tới repo gốc của từng engine.
+    <b>Overview</b> — cơ chế · dung lượng model (tải về) · repo gốc của từng engine.
     <table>
       <tr><th>Engine</th><th>Cơ chế</th><th>Dung lượng model</th><th>Repo gốc (GitHub)</th></tr>
       {overview_rows}
@@ -385,8 +383,10 @@ HTML = f"""<!doctype html>
   </div>
 
   <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
+    <b>→ Rút ra:</b> Gemini / StyleTTS2 / IndexTTS2 mượt & tự nhiên; F5 lộ wobble; Kokoro rõ nhưng hơi “máy”.</div></div>
   <div class="card">
-    <div class="sub">Kịch bản 1 (4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset) — nghe để cảm nhận tổng thể:</div>
+    <div class="sub">4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset.</div>
     <pre class="script">{html.escape(SCRIPT1)}</pre>
     <table>
       {audio_row("⭐ Giọng gốc (người)", "s1_original.wav", "ground truth")}
@@ -396,11 +396,15 @@ HTML = f"""<!doctype html>
   {details("📊 Biểu đồ — sóng & cao độ (bấm để mở)", imgs1)}
 
   <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> chấm điểm khách quan (ngữ điệu, cao độ, năng lượng…) và so trực tiếp với giọng người.
+    <b>→ Rút ra:</b> Gemini điểm cao nhất (90); nhưng metric phạt giọng người (dao động rộng) → phải nhìn số thô + nghe, đừng tin mỗi điểm tổng.</div></div>
   {details("📊 Số liệu & biểu đồ độ tự nhiên (bấm để mở)", nat_block)}
 
   <h2>3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> test nhân bản 1 giọng cụ thể từ clip mẫu; dùng 2 kịch bản (ngắn / đúng thoại ref) để kiểm độ tin cậy phép đo.
+    <b>→ Rút ra:</b> IndexTTS2 clone giống nhất; câu dài & trùng nội dung ref cho số ổn định, câu ngắn thì nhiễu.</div></div>
   <div class="card">
-    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — dùng làm giọng mẫu nhân bản cho <b>cả 2 kịch bản</b> dưới đây.</div>
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — giọng mẫu cho <b>cả 2 kịch bản</b>.</div>
     <table>{audio_row("⭐ Clip ref (neil)", "ref_neil.wav", "giọng gốc cần clone")}</table>
     <div class="sub" style="margin-top:12px"><b>Kịch bản A</b> — <code>“See you next time.”</code> (câu ngắn ~1–2s)</div>
     <table>{''.join(audio_row(LABEL[e], f"sy_{e}.wav") for e in ENG)}</table>
@@ -410,12 +414,15 @@ HTML = f"""<!doctype html>
   {details("📊 Bảng độ giống (2 kịch bản) + biểu đồ (bấm để mở)", clone_block)}
 
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> gộp 2 trục (giống giọng × tự nhiên) + tốc độ để chọn engine theo nhu cầu.
+    <b>→ Rút ra:</b> IndexTTS2 cân bằng nhất; Gemini tự nhiên nhưng không giống (preset); F5 giống nhưng kém tự nhiên; Kokoro nhanh nhất.</div></div>
   {details("📊 Biểu đồ đánh đổi & thời gian tạo (bấm để mở)", synth_block)}
 
   <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> thử ứng dụng thật — clone giọng đọc intro khoá học + xuất phụ đề <code>.srt</code> khớp giọng cho video.
+    <b>→ Rút ra:</b> clone đọc intro ổn; <code>.srt</code> chuẩn hoá cue khớp tốt; giọng rõ (Kokoro/Index) cho phụ đề chính xác, F5 sai chữ.</div></div>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học.
-    <b>Chọn engine → bấm ▶ play → phụ đề tự chạy/sáng theo giọng</b> (như video có sub). Kịch bản:</div>
+    <div class="sub">Clone từ <b>giọng TikTok (giây 10–20)</b>. <b>Chọn engine → ▶ play → phụ đề tự sáng theo giọng.</b></div>
     <pre class="script">{html.escape(SCRIPT_COURSE)}</pre>
     <table>{audio_row("⭐ Đoạn ref (TikTok, giây 10–20)", "course_ref.wav", "nguồn clone")}</table>
     <div class="krow">
@@ -428,8 +435,10 @@ HTML = f"""<!doctype html>
   {details("📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)", _course_tbl)}
 
   <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> kiểm tra có ép được “câu/đoạn = N giây” để khớp video/slide không.
+    <b>→ Rút ra:</b> ép được, 3 cách — native speed (xấp xỉ, tự nhiên) · atempo (đúng tổng) · per-câu (khớp từng dòng, chuẩn nhất cho slide).</div></div>
   <div class="card">
-    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép thành 2 / 3 / 4 / 5 / 6 giây</b> (giữ cao độ). Mỗi nút ghi rõ mốc + số giây thực tế:</div>
+    <div class="sub">1 câu — mỗi model ở độ dài <b>tự nhiên</b> rồi <b>ép 2/3/4/5/6 giây</b> (giữ cao độ); nút ghi rõ giây thực tế.</div>
     {_dur_blocks}
   </div>
   {details("📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)", _durctrl_tbl)}
@@ -444,8 +453,10 @@ HTML = f"""<!doctype html>
   </div>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> so engine open-source với dịch vụ trả phí (Gemini/HumeAI/Knowlify) về chất lượng/giá; test sâu khả năng điều khiển của Gemini.
+    <b>→ Rút ra:</b> Gemini chỉnh được giọng + cảm xúc (prompt) + multi-speaker 2 giọng; <code>speed</code>/<code>temperature</code> bị bỏ qua; chi phí research chỉ vài cent.</div></div>
   <div class="card">
-    <div class="sub">Ngoài 5 engine mã nguồn mở, đây là các dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
+    <div class="sub">Đọc cùng kịch bản 1 để so chất lượng/giá với 5 engine open-source.</div>
     <table>
       {audio_row("HumeAI — Octave 2 (audio)", "humeai.wav", "TTS biểu cảm, có API")}
       {audio_row("Gemini 2.5 Pro TTS (qua LiteLLM)", "s1_litellm.wav", "Google · giọng preset · không clone")}

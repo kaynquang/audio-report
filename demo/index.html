@@ -88,9 +88,7 @@
   </div>
 
   <div class="card">
-    <b>Overview</b> — Thử nghiệm 5 engine TTS mã nguồn mở: đánh giá (1) độ tự nhiên,
-    (2) khả năng <b>nhân bản giọng</b> từ clip mẫu, (3) tốc độ tạo. Bảng dưới: cơ chế,
-    dung lượng model (tải về), và link tới repo gốc của từng engine.
+    <b>Overview</b> — cơ chế · dung lượng model (tải về) · repo gốc của từng engine.
     <table>
       <tr><th>Engine</th><th>Cơ chế</th><th>Dung lượng model</th><th>Repo gốc (GitHub)</th></tr>
       <tr><td class="lbl">Kokoro</td><td>non-autoregressive 82M · không clone</td><td>~313 MB</td><td><a href="https://github.com/hexgrad/kokoro" target="_blank">hexgrad/kokoro</a></td></tr>
@@ -103,8 +101,10 @@
   </div>
 
   <h2>1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
+    <b>→ Rút ra:</b> Gemini / StyleTTS2 / IndexTTS2 mượt & tự nhiên; F5 lộ wobble; Kokoro rõ nhưng hơi “máy”.</div></div>
   <div class="card">
-    <div class="sub">Kịch bản 1 (4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset) — nghe để cảm nhận tổng thể:</div>
+    <div class="sub">4 engine clone từ <code>refs/speaker.wav</code>; Kokoro & Gemini dùng giọng preset.</div>
     <pre class="script">Hello, this is a short voice consistency test.
 Please keep the same tone, speed, and energy throughout the recording.
 The quick brown fox jumps over the lazy dog.
@@ -142,6 +142,8 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <figcaption>Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.</figcaption></figure></div></details>
 
   <h2>2) Độ tự nhiên — so với giọng người thật</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> chấm điểm khách quan (ngữ điệu, cao độ, năng lượng…) và so trực tiếp với giọng người.
+    <b>→ Rút ra:</b> Gemini điểm cao nhất (90); nhưng metric phạt giọng người (dao động rộng) → phải nhìn số thô + nghe, đừng tin mỗi điểm tổng.</div></div>
   <details class="card"><summary>📊 Số liệu &amp; biểu đồ độ tự nhiên (bấm để mở)</summary><div class="dbody"><div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div><table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>90.2</td></tr>
 <tr><td>StyleTTS2</td><td>89.6</td></tr>
 <tr><td>IndexTTS2</td><td>89.5</td></tr>
@@ -152,8 +154,10 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <figcaption>Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật.</figcaption></figure></div></details>
 
   <h2>3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> test nhân bản 1 giọng cụ thể từ clip mẫu; dùng 2 kịch bản (ngắn / đúng thoại ref) để kiểm độ tin cậy phép đo.
+    <b>→ Rút ra:</b> IndexTTS2 clone giống nhất; câu dài & trùng nội dung ref cho số ổn định, câu ngắn thì nhiễu.</div></div>
   <div class="card">
-    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — dùng làm giọng mẫu nhân bản cho <b>cả 2 kịch bản</b> dưới đây.</div>
+    <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — giọng mẫu cho <b>cả 2 kịch bản</b>.</div>
     <table><tr><td class="lbl">⭐ Clip ref (neil)</td>
       <td><audio controls preload="none" src="audio/ref_neil.wav"></audio></td>
       <td class="note">giọng gốc cần clone</td></tr></table>
@@ -187,6 +191,8 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
       <figcaption>Sóng: clip ref neil (đen, hàng trên) vs 5 engine — kịch bản B. Trục ngang: thời gian; trục dọc: biên độ.</figcaption></figure></div></details>
 
   <h2>4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> gộp 2 trục (giống giọng × tự nhiên) + tốc độ để chọn engine theo nhu cầu.
+    <b>→ Rút ra:</b> IndexTTS2 cân bằng nhất; Gemini tự nhiên nhưng không giống (preset); F5 giống nhưng kém tự nhiên; Kokoro nhanh nhất.</div></div>
   <details class="card"><summary>📊 Biểu đồ đánh đổi &amp; thời gian tạo (bấm để mở)</summary><div class="dbody"><figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng."/>
       <figcaption>Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.</figcaption></figure><table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
 <tr><td>StyleTTS2</td><td>29.5</td></tr>
@@ -195,9 +201,10 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
 <tr><td>F5-TTS</td><td>253.7</td></tr></table></div></details>
 
   <h2>5) Demo ứng dụng — Intro khoá học (giọng clone) + phụ đề chạy theo giọng</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> thử ứng dụng thật — clone giọng đọc intro khoá học + xuất phụ đề <code>.srt</code> khớp giọng cho video.
+    <b>→ Rút ra:</b> clone đọc intro ổn; <code>.srt</code> chuẩn hoá cue khớp tốt; giọng rõ (Kokoro/Index) cho phụ đề chính xác, F5 sai chữ.</div></div>
   <div class="card">
-    <div class="sub">Clone từ <b>giọng video TikTok (giây 10–20)</b>, đọc đoạn giới thiệu khoá học.
-    <b>Chọn engine → bấm ▶ play → phụ đề tự chạy/sáng theo giọng</b> (như video có sub). Kịch bản:</div>
+    <div class="sub">Clone từ <b>giọng TikTok (giây 10–20)</b>. <b>Chọn engine → ▶ play → phụ đề tự sáng theo giọng.</b></div>
     <pre class="script">Welcome to this Harvard introductory course. Over the next few sessions, we will explore the core concepts together, with clear examples and hands-on practice. Whether you are just starting out or brushing up, you are in the right place. Let&#x27;s get started.</pre>
     <table><tr><td class="lbl">⭐ Đoạn ref (TikTok, giây 10–20)</td>
       <td><audio controls preload="none" src="audio/course_ref.wav"></audio></td>
@@ -212,8 +219,10 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
   <details class="card"><summary>📊 Chất lượng phụ đề (số cue / độ khớp script) (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Số cue</th><th>WER (lời khớp script)</th></tr><tr><td>Kokoro</td><td>7</td><td>4.8%</td></tr><tr><td>Chatterbox</td><td>7</td><td>4.8%</td></tr><tr><td>F5-TTS</td><td>7</td><td>14.3%</td></tr><tr><td>StyleTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>IndexTTS2</td><td>7</td><td>4.8%</td></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>7</td><td>9.5%</td></tr></table><div class="note">SRT chuẩn hoá: ≤8 từ / ≤42 ký tự / ≤5s mỗi cue, ngắt ở dấu câu. WER ~4.8% là chênh do tách từ (không phải lỗi nội dung); F5 14.3% là sai chữ thật do giọng kém rõ.</div></div></details>
 
   <h2>6) Spec: điều khiển thời lượng (đặt câu này = N giây)</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> kiểm tra có ép được “câu/đoạn = N giây” để khớp video/slide không.
+    <b>→ Rút ra:</b> ép được, 3 cách — native speed (xấp xỉ, tự nhiên) · atempo (đúng tổng) · per-câu (khớp từng dòng, chuẩn nhất cho slide).</div></div>
   <div class="card">
-    <div class="sub">Cùng câu <code>“Welcome to this Harvard introductory course.”</code> — mỗi model ở độ dài <b>tự nhiên</b>, rồi <b>ép thành 2 / 3 / 4 / 5 / 6 giây</b> (giữ cao độ). Mỗi nút ghi rõ mốc + số giây thực tế:</div>
+    <div class="sub">1 câu — mỗi model ở độ dài <b>tự nhiên</b> rồi <b>ép 2/3/4/5/6 giây</b> (giữ cao độ); nút ghi rõ giây thực tế.</div>
     <div class="dureng"><div class="durname">Kokoro</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 3.1s</div><audio controls preload="none" src="audio/dur_kokoro_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.00s</div><audio controls preload="none" src="audio/dur_kokoro_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 3.01s</div><audio controls preload="none" src="audio/dur_kokoro_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 3.98s</div><audio controls preload="none" src="audio/dur_kokoro_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 4.99s</div><audio controls preload="none" src="audio/dur_kokoro_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.97s</div><audio controls preload="none" src="audio/dur_kokoro_6s.wav"></audio></div></div></div><div class="dureng"><div class="durname">Chatterbox</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 0.0s</div><audio controls preload="none" src="audio/dur_chatterbox_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.01s</div><audio controls preload="none" src="audio/dur_chatterbox_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 2.99s</div><audio controls preload="none" src="audio/dur_chatterbox_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 3.98s</div><audio controls preload="none" src="audio/dur_chatterbox_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 4.97s</div><audio controls preload="none" src="audio/dur_chatterbox_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.98s</div><audio controls preload="none" src="audio/dur_chatterbox_6s.wav"></audio></div></div></div><div class="dureng"><div class="durname">F5-TTS</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 5.9s</div><audio controls preload="none" src="audio/dur_f5_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.01s</div><audio controls preload="none" src="audio/dur_f5_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 2.99s</div><audio controls preload="none" src="audio/dur_f5_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 4.00s</div><audio controls preload="none" src="audio/dur_f5_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 5.00s</div><audio controls preload="none" src="audio/dur_f5_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.99s</div><audio controls preload="none" src="audio/dur_f5_6s.wav"></audio></div></div></div><div class="dureng"><div class="durname">StyleTTS2</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 3.7s</div><audio controls preload="none" src="audio/dur_styletts2_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.00s</div><audio controls preload="none" src="audio/dur_styletts2_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 3.01s</div><audio controls preload="none" src="audio/dur_styletts2_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 3.99s</div><audio controls preload="none" src="audio/dur_styletts2_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 4.98s</div><audio controls preload="none" src="audio/dur_styletts2_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.98s</div><audio controls preload="none" src="audio/dur_styletts2_6s.wav"></audio></div></div></div><div class="dureng"><div class="durname">IndexTTS2</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 4.6s</div><audio controls preload="none" src="audio/dur_index_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.00s</div><audio controls preload="none" src="audio/dur_index_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 2.99s</div><audio controls preload="none" src="audio/dur_index_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 4.00s</div><audio controls preload="none" src="audio/dur_index_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 4.98s</div><audio controls preload="none" src="audio/dur_index_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.98s</div><audio controls preload="none" src="audio/dur_index_6s.wav"></audio></div></div></div><div class="dureng"><div class="durname">Gemini 2.5 Pro (LiteLLM)</div><div class="durflex"><div class="durclip"><div class="durlab">Gốc — 3.3s</div><audio controls preload="none" src="audio/dur_litellm_base.wav"></audio></div><div class="durclip"><div class="durlab">Ép 2 giây → 2.01s</div><audio controls preload="none" src="audio/dur_litellm_2s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 3 giây → 3.02s</div><audio controls preload="none" src="audio/dur_litellm_3s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 4 giây → 3.98s</div><audio controls preload="none" src="audio/dur_litellm_4s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 5 giây → 4.99s</div><audio controls preload="none" src="audio/dur_litellm_5s.wav"></audio></div><div class="durclip"><div class="durlab">Ép 6 giây → 5.97s</div><audio controls preload="none" src="audio/dur_litellm_6s.wav"></audio></div></div></div>
   </div>
   <details class="card"><summary>📋 Khả năng điều khiển thời lượng từng engine (bấm để mở)</summary><div class="dbody"><table><tr><th>Engine</th><th>Điều khiển thời lượng?</th><th>Cách</th></tr><tr><td class='lbl'>F5-TTS</td><td>🟡 Có (tricky)</td><td><code>--fix_duration</code> nhưng tính CẢ độ dài clip ref; + <code>--speed</code></td></tr><tr><td class='lbl'>Kokoro</td><td>🟡 Qua tốc độ</td><td>tham số <code>speed</code> (hệ số tempo)</td></tr><tr><td class='lbl'>StyleTTS2</td><td>🟡 Qua tốc độ</td><td>scale bộ dự đoán thời lượng (cần code)</td></tr><tr><td class='lbl'>IndexTTS2</td><td>🟡 Nâng cao</td><td>model hỗ trợ duration-control; API cơ bản tự canh</td></tr><tr><td class='lbl'>Chatterbox</td><td>❌ Tự canh</td><td>không có tham số thời lượng</td></tr></table><div class="note">Cách chắc ăn cho MỌI engine: time-stretch hậu kỳ (ffmpeg <code>atempo</code>, giữ cao độ) → ép đúng số giây mong muốn, như demo bên trên (2/3/4s từ cùng một câu).</div></div></details>
@@ -243,8 +252,10 @@ Let&#x27;s get started.
   </div>
 
   <h2>7) Dịch vụ thương mại (closed-source) — có trả phí</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> so engine open-source với dịch vụ trả phí (Gemini/HumeAI/Knowlify) về chất lượng/giá; test sâu khả năng điều khiển của Gemini.
+    <b>→ Rút ra:</b> Gemini chỉnh được giọng + cảm xúc (prompt) + multi-speaker 2 giọng; <code>speed</code>/<code>temperature</code> bị bỏ qua; chi phí research chỉ vài cent.</div></div>
   <div class="card">
-    <div class="sub">Ngoài 5 engine mã nguồn mở, đây là các dịch vụ thương mại (đọc cùng kịch bản 1) để so sánh chất lượng/giá.</div>
+    <div class="sub">Đọc cùng kịch bản 1 để so chất lượng/giá với 5 engine open-source.</div>
     <table>
       <tr><td class="lbl">HumeAI — Octave 2 (audio)</td>
       <td><audio controls preload="none" src="audio/humeai.wav"></audio></td>
