@@ -100,7 +100,7 @@
       <tr><td class="lbl">Phạm vi</td><td>6 engine (5 open-source + Gemini commercial), cùng kịch bản; đo độ tự nhiên · clone · tốc độ · chi phí · điều khiển (thời lượng/cảm xúc/multi-speaker) · xuất .srt.</td></tr>
       <tr><td class="lbl">Thời gian</td><td>15–22/06/2026 (cập nhật 24/06/2026)</td></tr>
       <tr><td class="lbl">Version</td><td>Kokoro 0.9.4 · Chatterbox 0.1.7 · F5-TTS 1.1.20 · IndexTTS2 2.0.0 · StyleTTS2 (yl4579/LibriTTS) · Gemini 2.5 Pro Preview TTS</td></tr>
-      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="#s8">Mục 8 — Hướng dẫn cài &amp; xài Gemini qua LiteLLM</a> (ngay trong trang)</td></tr>
+      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="#s9">Mục 9 — Hướng dẫn cài &amp; xài Gemini qua LiteLLM</a> (ngay trong trang)</td></tr>
     </table>
   </div>
 
@@ -132,6 +132,14 @@
       <a href="https://github.com/yl4579/StyleTTS2" target="_blank">StyleTTS2</a> ·
       <a href="https://github.com/index-tts/index-tts" target="_blank">IndexTTS2</a>.</div>
   </div>
+
+  <div class="callout"><div><b>Phương pháp &amp; giới hạn</b> (đọc trước khi tin số):<br>
+    • Đo trên <b>Apple M4 Pro, CPU-only (no GPU)</b> — thứ tự tốc độ có thể đổi trên GPU.<br>
+    • Mỗi engine chạy <b>n = 1</b> (chưa lặp) → chênh nhỏ giữa engine là <b>nhiễu</b>; cần ≥5 lần + mean±std để chắc.<br>
+    • Cấu hình: Kokoro voice <code>af_heart</code>, Gemini voice <code>Kore</code>, speed 1.0, còn lại mặc định mỗi engine.<br>
+    • <b>Open-source ≠ miễn phí:</b> tự host tốn GPU/vận hành (TCO) vs Gemini API trả theo token.<br>
+    • Độ giống: embedding <b>Resemblyzer</b>; sàn (2 người khác nhau) ≈ <b>0.61</b>, trần (cùng người) ≈ <b>0.98</b>.<br>
+    • Chất lượng dùng UTMOS (dự đoán) — quyết định cuối vẫn nên xác nhận bằng người nghe (MOS thật).</div></div>
 
   <h2 data-toc="Nghe thử">1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="callout"><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
@@ -329,7 +337,12 @@ Let&#x27;s get started.
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2 data-toc="Hướng dẫn Gemini">8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
+  <h2 data-toc="Tiếng Việt">8) Tiếng Việt — engine nào đọc được?</h2>
+  <div class="callout"><div><b>Vì sao:</b> Athena là studio Việt — phải kiểm engine đọc được tiếng Việt không (mọi test trên chỉ tiếng Anh).
+    <b>→ Rút ra:</b> <b>Chỉ Gemini đọc đúng tiếng Việt.</b> Kokoro & IndexTTS2 hỏng (đọc bậy / bịa nội dung). Ranking tiếng Anh <b>không</b> suy ra cho tiếng Việt.</div></div>
+  <div class="card"><pre class="script">Chào mừng bạn đến với khoá học nhập môn. Trong các buổi tới, chúng ta sẽ cùng tìm hiểu những khái niệm cốt lõi, với ví dụ rõ ràng và thực hành trực tiếp. Chúc bạn học tốt.</pre><table><tr><th>Engine</th><th>Audio</th><th>Whisper nghe lại (dài · nội dung)</th><th>Kết quả</th></tr><tr><td class="lbl">Gemini 2.5 Pro (LiteLLM)</td><td><audio controls preload="none" src="audio/vi_litellm.wav"></audio></td><td class="note">9.0s · “Chào mừng bạn đến với khoá học nhập môn. Trong các buổi tới…”</td><td>Đọc ĐÚNG tiếng Việt</td></tr><tr><td class="lbl">Kokoro</td><td><audio controls preload="none" src="audio/vi_kokoro.wav"></audio></td><td class="note">33.4s · “Chow, M letter 1EBNG, B letter 1EA1N…” (đọc từng ký tự)</td><td>HỎNG — không có tiếng Việt</td></tr><tr><td class="lbl">IndexTTS2</td><td><audio controls preload="none" src="audio/vi_index.wav"></audio></td><td class="note">28.6s · “Hãy subscribe cho kênh lalaschool…” (nội dung KHÁC hẳn)</td><td>HỎNG — bịa nội dung</td></tr></table><div class="note">Gemini đọc đúng (9s); Kokoro dài gấp ~3.7× do đọc bậy từng ký tự; IndexTTS2 bịa hẳn nội dung khác (rò rỉ dữ liệu huấn luyện). Xác minh bằng Whisper (vi). ⇒ <b>Ranking đo bằng tiếng Anh KHÔNG áp dụng cho tiếng Việt.</b></div></div>
+
+  <h2 data-toc="Hướng dẫn Gemini">9) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
   <div class="callout"><div><b>Vì sao:</b> để team tự tích hợp Gemini TTS qua proxy LiteLLM mà không phải mò.
     <b>→ Rút ra:</b> 3 cách dùng (đơn giọng · cảm xúc · multi-speaker) + các bẫy đã gặp (SSL, Cloudflare, pcm16, speed/temp bị bỏ qua) + giá.</div></div>
   <div class="card">
@@ -381,7 +394,7 @@ pcm = np.frombuffer(base64.b64decode(resp[&quot;choices&quot;][0][&quot;message&
 sf.write(&quot;dialogue.wav&quot;, pcm, 24000)</pre><p>Giới hạn: <b>tối đa 2 người nói</b>.</p><h3>4. Giọng (voice)</h3><p>~<b>30 giọng preset</b>, vd: <code>Kore</code> (firm), <code>Puck</code> (upbeat), <code>Zephyr</code> (bright), <code>Enceladus</code> (breathy), <code>Sulafat</code> (warm)… Chọn qua <code>voice</code> (Cách 1/2) hoặc <code>voiceName</code> (Cách 3). <b>Không clone</b> giọng tùy ý.</p><h3>5. Lưu ý quan trọng (đã test thực tế)</h3><ul><li><b>SSL:</b> Python.org trên macOS thiếu CA → dùng <code>certifi</code> (<code>cafile=certifi.where()</code>), nếu không sẽ <code>CERTIFICATE_VERIFY_FAILED</code>.</li><li><b>Cloudflare:</b> thiếu User-Agent → bị chặn <code>403 error 1010</code>. Thêm <code>User-Agent: Mozilla/5.0</code>.</li><li><b>Format:</b> <code>/audio/speech</code> nhận <code>wav</code>; <code>/v1/chat/completions</code> <b>chỉ nhận <code>pcm16</code></b> (trả base64).</li><li><b><code>speed</code> và <code>temperature</code>: BỊ BỎ QUA</b> qua proxy (output không đổi). Muốn đổi tốc độ → time-stretch hậu kỳ (ffmpeg <code>atempo</code>).</li><li>Output: PCM 24 kHz.</li></ul><h3>6. Chi phí</h3><table><tr><th>Model</th><th>Input (text)</th><th>Output (audio)</th></tr><tr><td>gemini-2.5-pro-preview-tts</td><td>$1.00 / 1M token</td><td><b>$20.00 / 1M token</b></td></tr><tr><td>gemini-2.5-flash-preview-tts</td><td>$0.50 / 1M token</td><td>$10.00 / 1M token</td></tr></table><p>Audio output là phần tốn chính. Ví dụ research này: ~789 ký tự input → 56s audio ≈ vài cent.</p><h3>7. Nguồn (cross-check)</h3><ul><li>Gemini speech generation: https://ai.google.dev/gemini-api/docs/speech-generation</li><li>Gemini API pricing: https://ai.google.dev/gemini-api/docs/pricing</li><li>LiteLLM text-to-speech: https://docs.litellm.ai/docs/text_to_speech</li><li>LiteLLM repo: https://github.com/BerriAI/litellm</li><li>Proxy (Swagger UI): https://litellm.athena.tools/</li></ul>
   </div>
 
-  <h2 data-toc="Báo cáo PDF">9) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Báo cáo PDF">10) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>

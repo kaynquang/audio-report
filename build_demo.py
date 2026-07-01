@@ -32,6 +32,7 @@ def _read(name):
 SCRIPT1 = _read("voice_consistency_test.txt")
 SCRIPT2 = _read("voice_similarity_test.txt")
 SCRIPT_COURSE = _read("harvard_intro.txt")
+SCRIPT_VI = _read("vi_intro.txt")
 
 # ---- copy audio ----
 for e in ENG:
@@ -67,6 +68,9 @@ if os.path.exists(_pls):
 cp("refs/tiktok_10_20.wav", "course_ref.wav", "audio")   # giọng video TikTok, giây 10–20
 for e in ENG:
     cp(f"outputs5/{e}.wav", f"course_{e}.wav", "audio")     # intro khoá học
+# test tiếng Việt
+for e in ("litellm", "kokoro", "index"):
+    cp(f"outputs_vi/{e}.wav", f"vi_{e}.wav", "audio")
 # dịch vụ thương mại (closed-source)
 cp("non-open/humeai.wav", "humeai.wav", "audio")
 cp("non-open/knowlify.mp4", "knowlify.mp4", "video")
@@ -361,6 +365,22 @@ NAVJS = """<script>
 })();
 </script>"""
 
+_VI = [("Gemini 2.5 Pro (LiteLLM)", "vi_litellm.wav", "9.0s",
+        "“Chào mừng bạn đến với khoá học nhập môn. Trong các buổi tới…”", "Đọc ĐÚNG tiếng Việt"),
+       ("Kokoro", "vi_kokoro.wav", "33.4s",
+        "“Chow, M letter 1EBNG, B letter 1EA1N…” (đọc từng ký tự)", "HỎNG — không có tiếng Việt"),
+       ("IndexTTS2", "vi_index.wav", "28.6s",
+        "“Hãy subscribe cho kênh lalaschool…” (nội dung KHÁC hẳn)", "HỎNG — bịa nội dung")]
+vi_rows = "".join(
+    f'<tr><td class="lbl">{n}</td>'
+    f'<td><audio controls preload="none" src="audio/{f}"></audio></td>'
+    f'<td class="note">{d} · {html.escape(t)}</td><td>{v}</td></tr>' for n, f, d, t, v in _VI)
+vi_block = (f'<pre class="script">{html.escape(SCRIPT_VI)}</pre>'
+            '<table><tr><th>Engine</th><th>Audio</th><th>Whisper nghe lại (dài · nội dung)</th><th>Kết quả</th></tr>'
+            + vi_rows + '</table>'
+            '<div class="note">Gemini đọc đúng (9s); Kokoro dài gấp ~3.7× do đọc bậy từng ký tự; IndexTTS2 bịa hẳn nội dung khác (rò rỉ dữ liệu huấn luyện). '
+            'Xác minh bằng Whisper (vi). ⇒ <b>Ranking đo bằng tiếng Anh KHÔNG áp dụng cho tiếng Việt.</b></div>')
+
 synth_block = (img("tradeoff_scatter.png", "Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: UTMOS độ tự nhiên (1–5). Góc trên-phải là lý tưởng.")
                + f'<table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr>{rows(timing, lambda v: f"{v:.1f}")}</table>')
 
@@ -467,7 +487,7 @@ HTML = f"""<!doctype html>
       <tr><td class="lbl">Phạm vi</td><td>6 engine (5 open-source + Gemini commercial), cùng kịch bản; đo độ tự nhiên · clone · tốc độ · chi phí · điều khiển (thời lượng/cảm xúc/multi-speaker) · xuất .srt.</td></tr>
       <tr><td class="lbl">Thời gian</td><td>15–22/06/2026 (cập nhật 24/06/2026)</td></tr>
       <tr><td class="lbl">Version</td><td>Kokoro 0.9.4 · Chatterbox 0.1.7 · F5-TTS 1.1.20 · IndexTTS2 2.0.0 · StyleTTS2 (yl4579/LibriTTS) · Gemini 2.5 Pro Preview TTS</td></tr>
-      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="#s8">Mục 8 — Hướng dẫn cài &amp; xài Gemini qua LiteLLM</a> (ngay trong trang)</td></tr>
+      <tr><td class="lbl">Doc tích hợp Gemini</td><td><a href="#s9">Mục 9 — Hướng dẫn cài &amp; xài Gemini qua LiteLLM</a> (ngay trong trang)</td></tr>
     </table>
   </div>
 
@@ -495,6 +515,14 @@ HTML = f"""<!doctype html>
       <a href="https://github.com/yl4579/StyleTTS2" target="_blank">StyleTTS2</a> ·
       <a href="https://github.com/index-tts/index-tts" target="_blank">IndexTTS2</a>.</div>
   </div>
+
+  <div class="callout"><div><b>Phương pháp &amp; giới hạn</b> (đọc trước khi tin số):<br>
+    • Đo trên <b>Apple M4 Pro, CPU-only (no GPU)</b> — thứ tự tốc độ có thể đổi trên GPU.<br>
+    • Mỗi engine chạy <b>n = 1</b> (chưa lặp) → chênh nhỏ giữa engine là <b>nhiễu</b>; cần ≥5 lần + mean±std để chắc.<br>
+    • Cấu hình: Kokoro voice <code>af_heart</code>, Gemini voice <code>Kore</code>, speed 1.0, còn lại mặc định mỗi engine.<br>
+    • <b>Open-source ≠ miễn phí:</b> tự host tốn GPU/vận hành (TCO) vs Gemini API trả theo token.<br>
+    • Độ giống: embedding <b>Resemblyzer</b>; sàn (2 người khác nhau) ≈ <b>0.61</b>, trần (cùng người) ≈ <b>0.98</b>.<br>
+    • Chất lượng dùng UTMOS (dự đoán) — quyết định cuối vẫn nên xác nhận bằng người nghe (MOS thật).</div></div>
 
   <h2 data-toc="Nghe thử">1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> nghe cùng 1 kịch bản + đối chiếu giọng người gốc để cảm nhận tổng thể.
@@ -601,14 +629,19 @@ HTML = f"""<!doctype html>
       Khác biệt chính: engine mã nguồn mở = miễn phí, tự host (cần GPU/setup); dịch vụ thương mại = trả phí nhưng tiện, Knowlify ra thẳng video.</div>
   </div>
 
-  <h2 data-toc="Hướng dẫn Gemini">8) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
+  <h2 data-toc="Tiếng Việt">8) Tiếng Việt — engine nào đọc được?</h2>
+  <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> Athena là studio Việt — phải kiểm engine đọc được tiếng Việt không (mọi test trên chỉ tiếng Anh).
+    <b>→ Rút ra:</b> <b>Chỉ Gemini đọc đúng tiếng Việt.</b> Kokoro & IndexTTS2 hỏng (đọc bậy / bịa nội dung). Ranking tiếng Anh <b>không</b> suy ra cho tiếng Việt.</div></div>
+  <div class="card">{vi_block}</div>
+
+  <h2 data-toc="Hướng dẫn Gemini">9) Hướng dẫn — Gemini 2.5 Pro TTS qua LiteLLM</h2>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> để team tự tích hợp Gemini TTS qua proxy LiteLLM mà không phải mò.
     <b>→ Rút ra:</b> 3 cách dùng (đơn giọng · cảm xúc · multi-speaker) + các bẫy đã gặp (SSL, Cloudflare, pcm16, speed/temp bị bỏ qua) + giá.</div></div>
   <div class="card">
     {DOC_HTML}
   </div>
 
-  <h2 data-toc="Báo cáo PDF">9) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Báo cáo PDF">10) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
