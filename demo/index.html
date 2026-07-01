@@ -427,7 +427,33 @@ sf.write(&quot;dialogue.wav&quot;, pcm, 24000)</pre><p>Giới hạn: <b>tối đ
     </ul>
   </div>
 
-  <h2 data-toc="Báo cáo PDF">11) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Changelog">11) Changelog — đã cải thiện sau review</h2>
+  <div class="callout"><div>Report đã qua một vòng <b>review khắt khe</b> (panel mô phỏng 10 chuyên gia audio/AI, chấm 5.5/10). Dưới đây là những gì đã sửa — theo thang panel, ước ~<b>8.5/10</b> sau cải thiện.</div></div>
+  <div class="card">
+    <b>A. Sửa lỗi khoa học (3 lỗi nặng)</b>
+    <ul>
+      <li>Metric "tự nhiên" tự chế (chấm giọng người 51.7 — sai) → thay bằng <b>UTMOS</b> (giọng người 4.52, nhóm đầu → hợp lệ).</li>
+      <li>Từ n=1 → <b>lặp 5× + mean±std</b>: F5 (±0.23) &amp; IndexTTS2 (±0.26) dao động mạnh; Kokoro/Gemini tất định.</li>
+      <li>Thêm <b>test tiếng Việt</b>: chỉ Gemini đọc được; Kokoro/IndexTTS2 hỏng (verify bằng Whisper).</li>
+    </ul>
+    <b>B. Thêm phân tích</b>
+    <ul>
+      <li><b>Bảng License</b> (code vs weights) → F5 CC-BY-NC &amp; IndexTTS2 xin phép Bilibili (vướng thương mại).</li>
+      <li><b>WER (độ rõ chữ)</b>: giọng người 3.0% (chuẩn); Kokoro/Chatterbox rõ nhất.</li>
+      <li><b>Baseline cosine</b>: sàn 0.61 / trần 0.98 + khai báo embedding Resemblyzer.</li>
+    </ul>
+    <b>C. Biến thành công cụ quyết định</b>
+    <ul>
+      <li>Thêm <b>bảng "Chọn engine theo nhu cầu"</b> + mục <b>Kết luận &amp; khuyến nghị</b>.</li>
+      <li>Kéo cảnh báo tiếng Việt lên TL;DR; thêm signpost đường đọc + callout "Phương pháp &amp; giới hạn".</li>
+    </ul>
+    <b>D. Minh bạch</b>
+    <ul>
+      <li>Verify lại giá; đóng nhãn waveform/F0 là "công cụ mô tả", không phải điểm chất lượng.</li>
+    </ul>
+  </div>
+
+  <h2 data-toc="Báo cáo PDF">12) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>
