@@ -593,7 +593,7 @@ HTML = f"""<!doctype html>
     <b>→ Rút ra:</b> IndexTTS2 clone giống nhất; câu dài & trùng nội dung ref cho số ổn định, câu ngắn thì nhiễu.</div></div>
   <div class="card">
     <div class="sub">Clip ref <code>neil.wav</code> (4.5s) — giọng mẫu cho <b>cả 2 kịch bản</b>.</div>
-    <table>{audio_row("⭐ Clip ref (neil)", "ref_neil.wav", "giọng gốc cần clone")}</table>
+    <table>{audio_row("⭐ Clip ref (neil)", "ref_neil.wav", "giọng gốc cần clone · đã có bản quyền / đồng ý")}</table>
     <div class="sub" style="margin-top:12px"><b>Kịch bản A</b> — <code>“See you next time.”</code> (câu ngắn ~1–2s)</div>
     <table>{''.join(audio_row(LABEL[e], f"sy_{e}.wav") for e in ENG)}</table>
     <div class="sub" style="margin-top:12px"><b>Kịch bản B</b> — <code>“Ladies and gentlemen, welcome.”</code> (đúng thoại clip ref)</div>
@@ -697,7 +697,7 @@ HTML = f"""<!doctype html>
       <li>UTMOS là điểm <i>dự đoán</i> — quyết định lớn nên xác nhận bằng <b>người nghe (MOS thật)</b>.</li>
       <li>F5 &amp; IndexTTS2 <b>dao động mạnh</b> giữa các lần chạy → đừng tin điểm 1-lần.</li>
       <li>Tốc độ đo trên <b>CPU</b>; production chạy GPU thì thứ tự có thể đổi.</li>
-      <li><b>Bản quyền giọng:</b> chỉ clone giọng đã có đồng ý / được cấp phép.</li>
+      <li><b>Bản quyền giọng:</b> các clip ref dùng để clone trong research này (<code>neil</code>, TikTok, giọng gốc) <b>đã được cấp phép / có sự đồng ý</b>. Khi mở rộng: chỉ clone giọng đã có quyền dùng.</li>
     </ul>
   </div>
 
