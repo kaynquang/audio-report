@@ -28,7 +28,7 @@ REF = "#111111"
 # số liệu (đồng bộ, lấy từ các phép đo trước)
 SIM_NEIL = {"index": 0.951, "f5": 0.876, "chatterbox": 0.873, "styletts2": 0.797,
             "kokoro": 0.517, "litellm": 0.598}
-HUMAN = {"litellm": 90.2, "styletts2": 89.6, "index": 89.5, "kokoro": 80.9, "chatterbox": 78.4, "f5": 35.4}
+HUMAN = {"litellm": 4.51, "styletts2": 4.55, "index": 4.10, "kokoro": 4.54, "chatterbox": 4.57, "f5": 4.00}  # UTMOS 1-5
 
 plt.rcParams.update({
     "figure.facecolor": "white", "savefig.facecolor": "white", "savefig.dpi": 120,
@@ -136,7 +136,7 @@ def scatter(out):
         ax.scatter(x, y, s=190, color=COLORS[e], edgecolor=REF, lw=1.2, zorder=3)
         ax.annotate(LABEL[e], (x, y), textcoords="offset points", xytext=(9, 6), fontsize=11)
     ax.set_xlabel("Độ giống clip ref neil  (cosine →)")
-    ax.set_ylabel("Điểm độ tự nhiên  (0–100 →)")
+    ax.set_ylabel("UTMOS — độ tự nhiên (1–5 →)")
     ax.set_title("Tổng hợp: độ giống giọng vs độ tự nhiên")
     ax.text(0.02, 0.03, "góc trên-phải = lý tưởng (vừa giống vừa tự nhiên)",
             transform=ax.transAxes, fontsize=9, color="#777")

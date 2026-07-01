@@ -84,7 +84,7 @@
 
   <div class="callout key"><div>
     <b>TL;DR</b> — Research so sánh <b>6 engine TTS</b> (5 open-source + Gemini) cho Athena, trên cùng kịch bản.<br>
-    • Tự nhiên nhất: <b>Gemini ≈ StyleTTS2 ≈ IndexTTS2</b><br>
+    • Tự nhiên (UTMOS): nhóm đầu ~4.5 <b>ngang giọng người</b> (StyleTTS2 / Kokoro / Chatterbox / Gemini); F5 &amp; IndexTTS2 thấp hơn<br>
     • Clone giống giọng nhất: <b>IndexTTS2</b><br>
     • Nhanh / nhẹ nhất: <b>Kokoro</b><br>
     <span class="sub" style="margin:0">Cuộn xuống để nghe trực tiếp, xem biểu đồ & cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).</span>
@@ -157,17 +157,24 @@ Honestly, I did not expect the final results to be this good.
 Thank you for listening, and I hope you have a wonderful day.</pre><figure><img src="img/compare_scripts_waveforms.png" alt="Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2."/>
       <figcaption>Sóng 2 kịch bản cạnh nhau cho từng engine — trái: kịch bản 1, phải: kịch bản 2.</figcaption></figure></div></details>
 
-  <h2 data-toc="Độ tự nhiên">2) Độ tự nhiên — so với giọng người thật</h2>
-  <div class="callout"><div><b>Vì sao:</b> chấm điểm khách quan (ngữ điệu, cao độ, năng lượng…) và so trực tiếp với giọng người.
-    <b>→ Rút ra:</b> Gemini điểm cao nhất (90); nhưng metric phạt giọng người (dao động rộng) → phải nhìn số thô + nghe, đừng tin mỗi điểm tổng.</div></div>
-  <details class="card"><summary>Số liệu &amp; biểu đồ độ tự nhiên (bấm để mở)</summary><div class="dbody"><div class="sub">Điểm proxy 0–100 từ các chỉ số âm học (ngữ điệu, cao độ, năng lượng, timbre…).</div><table><tr><th>Engine</th><th>Điểm tự nhiên /100</th></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>90.2</td></tr>
+  <h2 data-toc="Độ tự nhiên">2) Độ tự nhiên — UTMOS (MOS dự đoán)</h2>
+  <div class="callout"><div><b>Vì sao:</b> đo độ tự nhiên bằng thước đo hợp lệ. Bản đầu dùng proxy tự chế → chấm <b>giọng người 51.7 &lt; máy</b> (lỗi nặng), nên đã thay bằng <b>UTMOS</b> (mô hình dự đoán MOS chuẩn ngành).
+    <b>→ Rút ra:</b> nhóm đầu ~4.5 gồm cả <b>giọng người</b> (Chatterbox/StyleTTS2/Kokoro/Gemini ≈ người); <b>F5 & IndexTTS2 thấp hơn</b>. Chênh nhóm đầu là nhiễu (n=1).</div></div>
+  <div class="card"><div class="sub"><b>UTMOS</b> — mô hình dự đoán MOS (thang 1–5, cao = tự nhiên hơn), chuẩn thay cho người nghe. Điểm quan trọng: <b>giọng người thật lọt nhóm đầu (4.52)</b> ⇒ thước đo hợp lệ (khác hẳn proxy cũ chấm người 51.7).</div><table><tr><th>Engine</th><th>UTMOS (1–5)</th></tr><tr><td>Chatterbox</td><td>4.57</td></tr>
+<tr><td>StyleTTS2</td><td>4.55</td></tr>
+<tr><td>Kokoro</td><td>4.54</td></tr>
+<tr><td>Giọng gốc (người)</td><td>4.52</td></tr>
+<tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>4.51</td></tr>
+<tr><td>IndexTTS2</td><td>4.10</td></tr>
+<tr><td>F5-TTS</td><td>4.00</td></tr></table><div class="note">Nhóm đầu (~4.5) chênh nhau trong khoảng nhiễu (mỗi engine n=1) → coi như <b>ngang nhau</b>; F5 & IndexTTS2 thấp hơn rõ. UTMOS là <i>dự đoán</i> — quyết định cuối vẫn nên xác nhận bằng MOS người nghe.</div></div>
+  <details class="card"><summary>Chỉ số mô tả tín hiệu (proxy /100 cũ + biểu đồ) — KHÔNG phải chất lượng (bấm để mở)</summary><div class="dbody"><div class="note"><b>Cảnh báo:</b> bảng proxy /100 dưới đây <b>bị lỗi</b> — nó chấm giọng người 51.7 &lt; máy, tức đo <b>độ đều tín hiệu</b> chứ KHÔNG phải chất lượng. Giữ lại chỉ để xem chỉ số thô, KHÔNG dùng để xếp hạng.</div><table><tr><th>Engine</th><th>Proxy /100 (không dùng xếp hạng)</th></tr><tr><td>Gemini 2.5 Pro (LiteLLM)</td><td>90.2</td></tr>
 <tr><td>StyleTTS2</td><td>89.6</td></tr>
 <tr><td>IndexTTS2</td><td>89.5</td></tr>
 <tr><td>Kokoro</td><td>80.9</td></tr>
 <tr><td>Chatterbox</td><td>78.4</td></tr>
 <tr><td>Giọng gốc (người)</td><td>51.7</td></tr>
-<tr><td>F5-TTS</td><td>35.4</td></tr></table><figure><img src="img/compare_to_original.png" alt="Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật."/>
-      <figcaption>Từng chỉ số của mỗi engine (cột màu) so với GIỌNG GỐC (đường đứt đen). Cột càng gần đường đứt = càng giống người thật.</figcaption></figure></div></details>
+<tr><td>F5-TTS</td><td>35.4</td></tr></table><figure><img src="img/compare_to_original.png" alt="Chỉ số âm học mỗi engine vs giọng gốc — mang tính MÔ TẢ (diagnostic), không phải điểm chất lượng."/>
+      <figcaption>Chỉ số âm học mỗi engine vs giọng gốc — mang tính MÔ TẢ (diagnostic), không phải điểm chất lượng.</figcaption></figure></div></details>
 
   <h2 data-toc="Clone giọng">3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
   <div class="callout"><div><b>Vì sao:</b> test nhân bản 1 giọng cụ thể từ clip mẫu; dùng 2 kịch bản (ngắn / đúng thoại ref) để kiểm độ tin cậy phép đo.
@@ -209,8 +216,8 @@ Thank you for listening, and I hope you have a wonderful day.</pre><figure><img 
   <h2 data-toc="Tổng hợp">4) Tổng hợp — giống giọng vs tự nhiên, và tốc độ</h2>
   <div class="callout"><div><b>Vì sao:</b> gộp 2 trục (giống giọng × tự nhiên) + tốc độ để chọn engine theo nhu cầu.
     <b>→ Rút ra:</b> IndexTTS2 cân bằng nhất; Gemini tự nhiên nhưng không giống (preset); F5 giống nhưng kém tự nhiên; Kokoro nhanh nhất.</div></div>
-  <details class="card"><summary>Biểu đồ đánh đổi &amp; thời gian tạo (bấm để mở)</summary><div class="dbody"><figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng."/>
-      <figcaption>Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: điểm tự nhiên (0–100). Góc trên-phải là lý tưởng.</figcaption></figure><table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
+  <details class="card"><summary>Biểu đồ đánh đổi &amp; thời gian tạo (bấm để mở)</summary><div class="dbody"><figure><img src="img/tradeoff_scatter.png" alt="Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: UTMOS độ tự nhiên (1–5). Góc trên-phải là lý tưởng."/>
+      <figcaption>Mỗi điểm là một engine. Trục ngang: độ giống clip ref neil (cosine); trục dọc: UTMOS độ tự nhiên (1–5). Góc trên-phải là lý tưởng.</figcaption></figure><table><tr><th>Engine</th><th>Thời gian tạo (giây, CPU)</th></tr><tr><td>Kokoro</td><td>12.7</td></tr>
 <tr><td>StyleTTS2</td><td>29.5</td></tr>
 <tr><td>Chatterbox</td><td>38.0</td></tr>
 <tr><td>IndexTTS2</td><td>68.8</td></tr>
