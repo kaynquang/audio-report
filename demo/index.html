@@ -87,9 +87,19 @@
     • Tự nhiên (UTMOS): nhóm đầu ~4.5 <b>ngang giọng người</b> (StyleTTS2 / Kokoro / Chatterbox / Gemini); F5 &amp; IndexTTS2 thấp hơn<br>
     • Clone giống giọng nhất: <b>IndexTTS2</b> — <i>nhưng vướng license thương mại</i><br>
     • Nhanh / nhẹ nhất: <b>Kokoro</b> (Apache-2.0, thương mại thoải mái)<br>
-    • <b>Lưu ý license:</b> F5 &amp; IndexTTS2 weights KHÔNG cho dùng thương mại tự do (xem bảng License)<br>
+    • <b>Tiếng Việt:</b> CHỈ Gemini đọc được (Kokoro/IndexTTS2 hỏng) — quyết định với studio VN<br>
+    • <b>License:</b> F5 &amp; IndexTTS2 weights KHÔNG cho dùng thương mại tự do<br>
     <span class="sub" style="margin:0">Cuộn xuống để nghe trực tiếp, xem biểu đồ & cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).</span>
   </div></div>
+
+  <div class="card">
+    <b>Chọn engine theo nhu cầu</b> — câu trả lời nhanh:
+    <table>
+      <tr><th>Nhu cầu</th><th>Nên dùng</th><th>Vì</th><th>Lưu ý</th></tr>
+      <tr><td>Voiceover / khoá học <b>tiếng Việt</b></td><td class="lbl">Gemini 2.5 Pro</td><td>engine DUY NHẤT đọc đúng tiếng Việt</td><td class="note">trả phí theo token</td></tr><tr><td>Tiếng Anh · khối lượng lớn · rẻ/nhanh</td><td class="lbl">Kokoro</td><td>gần real-time, Apache-2.0 (thương mại thoải mái)</td><td class="note">không clone · không tiếng Việt</td></tr><tr><td>Clone giọng cụ thể (tiếng Anh, nội bộ)</td><td class="lbl">IndexTTS2</td><td>giống giọng gốc nhất (~0.95)</td><td class="note">license Bilibili · dao động mạnh · không VN</td></tr><tr><td>Clone + <b>cần thương mại tự do</b></td><td class="lbl">Chatterbox</td><td>MIT (code+weights) + clone được</td><td class="note">giống kém IndexTTS2, giọng hơi cao</td></tr><tr><td>Cảm xúc / hội thoại 2 giọng</td><td class="lbl">Gemini 2.5 Pro</td><td>điều khiển cảm xúc qua prompt + multi-speaker</td><td class="note">trả phí · giọng preset</td></tr>
+    </table>
+    <div class="note">Đường đọc nhanh: <b>PM</b> → TL;DR + bảng này · <b>Kỹ sư</b> → mục 9 (Hướng dẫn tích hợp) · <b>Reviewer</b> → Phương pháp & giới hạn + mục 2.</div>
+  </div>
 
   <div class="toc"><div class="toc-h">MỤC LỤC</div><div id="toc"></div></div>
 
@@ -395,7 +405,22 @@ pcm = np.frombuffer(base64.b64decode(resp[&quot;choices&quot;][0][&quot;message&
 sf.write(&quot;dialogue.wav&quot;, pcm, 24000)</pre><p>Giới hạn: <b>tối đa 2 người nói</b>.</p><h3>4. Giọng (voice)</h3><p>~<b>30 giọng preset</b>, vd: <code>Kore</code> (firm), <code>Puck</code> (upbeat), <code>Zephyr</code> (bright), <code>Enceladus</code> (breathy), <code>Sulafat</code> (warm)… Chọn qua <code>voice</code> (Cách 1/2) hoặc <code>voiceName</code> (Cách 3). <b>Không clone</b> giọng tùy ý.</p><h3>5. Lưu ý quan trọng (đã test thực tế)</h3><ul><li><b>SSL:</b> Python.org trên macOS thiếu CA → dùng <code>certifi</code> (<code>cafile=certifi.where()</code>), nếu không sẽ <code>CERTIFICATE_VERIFY_FAILED</code>.</li><li><b>Cloudflare:</b> thiếu User-Agent → bị chặn <code>403 error 1010</code>. Thêm <code>User-Agent: Mozilla/5.0</code>.</li><li><b>Format:</b> <code>/audio/speech</code> nhận <code>wav</code>; <code>/v1/chat/completions</code> <b>chỉ nhận <code>pcm16</code></b> (trả base64).</li><li><b><code>speed</code> và <code>temperature</code>: BỊ BỎ QUA</b> qua proxy (output không đổi). Muốn đổi tốc độ → time-stretch hậu kỳ (ffmpeg <code>atempo</code>).</li><li>Output: PCM 24 kHz.</li></ul><h3>6. Chi phí</h3><table><tr><th>Model</th><th>Input (text)</th><th>Output (audio)</th></tr><tr><td>gemini-2.5-pro-preview-tts</td><td>$1.00 / 1M token</td><td><b>$20.00 / 1M token</b></td></tr><tr><td>gemini-2.5-flash-preview-tts</td><td>$0.50 / 1M token</td><td>$10.00 / 1M token</td></tr></table><p>Audio output là phần tốn chính. Ví dụ research này: ~789 ký tự input → 56s audio ≈ vài cent.</p><h3>7. Nguồn (cross-check)</h3><ul><li>Gemini speech generation: https://ai.google.dev/gemini-api/docs/speech-generation</li><li>Gemini API pricing: https://ai.google.dev/gemini-api/docs/pricing</li><li>LiteLLM text-to-speech: https://docs.litellm.ai/docs/text_to_speech</li><li>LiteLLM repo: https://github.com/BerriAI/litellm</li><li>Proxy (Swagger UI): https://litellm.athena.tools/</li></ul>
   </div>
 
-  <h2 data-toc="Báo cáo PDF">10) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Kết luận">10) Kết luận &amp; khuyến nghị</h2>
+  <div class="callout key"><div><b>Cho Athena (studio Việt · dùng thương mại):</b><br>
+    • <b>Tiếng Việt</b> (voiceover / khoá học): <b>Gemini 2.5 Pro</b> — engine duy nhất đọc đúng VN; trả phí theo token (rẻ ở quy mô nhỏ).<br>
+    • <b>Tiếng Anh, khối lượng lớn</b>: <b>Kokoro</b> — nhanh gần real-time, Apache-2.0, tự host miễn phí bản quyền.<br>
+    • <b>Clone giọng</b>: mạnh nhất (IndexTTS2 / F5) nhưng <b>vướng license thương mại + không đọc VN + dao động mạnh</b> → chỉ hợp nội bộ/demo. Cần thương mại → <b>Chatterbox</b> (MIT) hoặc xin phép Bilibili.</div></div>
+  <div class="card">
+    <b>Cảnh báo trước khi quyết:</b>
+    <ul>
+      <li>UTMOS là điểm <i>dự đoán</i> — quyết định lớn nên xác nhận bằng <b>người nghe (MOS thật)</b>.</li>
+      <li>F5 &amp; IndexTTS2 <b>dao động mạnh</b> giữa các lần chạy → đừng tin điểm 1-lần.</li>
+      <li>Tốc độ đo trên <b>CPU</b>; production chạy GPU thì thứ tự có thể đổi.</li>
+      <li><b>Bản quyền giọng:</b> chỉ clone giọng đã có đồng ý / được cấp phép.</li>
+    </ul>
+  </div>
+
+  <h2 data-toc="Báo cáo PDF">11) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       <li><a href="pdf/report_full.pdf">Báo cáo tổng hợp (chỉ số + similarity)</a></li><li><a href="pdf/report_clone.pdf">Báo cáo clone giọng voiceover</a></li><li><a href="pdf/report.pdf">Báo cáo so sánh + độ tự nhiên</a></li><li><a href="pdf/report_similarity.pdf">Báo cáo similarity</a></li>

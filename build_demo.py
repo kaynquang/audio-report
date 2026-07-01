@@ -138,6 +138,17 @@ LICENSE = [
 ]
 license_rows = "".join(f'<tr><td class="lbl">{e}</td><td>{lic}</td><td>{com}</td></tr>' for e, lic, com in LICENSE)
 
+# Bảng chọn engine theo nhu cầu (nhu cầu, engine, vì, lưu ý)
+DECISION = [
+    ("Voiceover / khoá học <b>tiếng Việt</b>", "Gemini 2.5 Pro", "engine DUY NHẤT đọc đúng tiếng Việt", "trả phí theo token"),
+    ("Tiếng Anh · khối lượng lớn · rẻ/nhanh", "Kokoro", "gần real-time, Apache-2.0 (thương mại thoải mái)", "không clone · không tiếng Việt"),
+    ("Clone giọng cụ thể (tiếng Anh, nội bộ)", "IndexTTS2", "giống giọng gốc nhất (~0.95)", "license Bilibili · dao động mạnh · không VN"),
+    ("Clone + <b>cần thương mại tự do</b>", "Chatterbox", "MIT (code+weights) + clone được", "giống kém IndexTTS2, giọng hơi cao"),
+    ("Cảm xúc / hội thoại 2 giọng", "Gemini 2.5 Pro", "điều khiển cảm xúc qua prompt + multi-speaker", "trả phí · giọng preset"),
+]
+decision_rows = "".join(f'<tr><td>{nc}</td><td class="lbl">{en}</td><td>{vi}</td><td class="note">{lu}</td></tr>'
+                        for nc, en, vi, lu in DECISION)
+
 
 def rows(data, fmt):
     return "\n".join(f"<tr><td>{html.escape(n)}</td><td>{fmt(v)}</td></tr>" for n, v in data)
@@ -489,9 +500,19 @@ HTML = f"""<!doctype html>
     • Tự nhiên (UTMOS): nhóm đầu ~4.5 <b>ngang giọng người</b> (StyleTTS2 / Kokoro / Chatterbox / Gemini); F5 &amp; IndexTTS2 thấp hơn<br>
     • Clone giống giọng nhất: <b>IndexTTS2</b> — <i>nhưng vướng license thương mại</i><br>
     • Nhanh / nhẹ nhất: <b>Kokoro</b> (Apache-2.0, thương mại thoải mái)<br>
-    • <b>Lưu ý license:</b> F5 &amp; IndexTTS2 weights KHÔNG cho dùng thương mại tự do (xem bảng License)<br>
+    • <b>Tiếng Việt:</b> CHỈ Gemini đọc được (Kokoro/IndexTTS2 hỏng) — quyết định với studio VN<br>
+    • <b>License:</b> F5 &amp; IndexTTS2 weights KHÔNG cho dùng thương mại tự do<br>
     <span class="sub" style="margin:0">Cuộn xuống để nghe trực tiếp, xem biểu đồ & cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).</span>
   </div></div>
+
+  <div class="card">
+    <b>Chọn engine theo nhu cầu</b> — câu trả lời nhanh:
+    <table>
+      <tr><th>Nhu cầu</th><th>Nên dùng</th><th>Vì</th><th>Lưu ý</th></tr>
+      {decision_rows}
+    </table>
+    <div class="note">Đường đọc nhanh: <b>PM</b> → TL;DR + bảng này · <b>Kỹ sư</b> → mục 9 (Hướng dẫn tích hợp) · <b>Reviewer</b> → Phương pháp & giới hạn + mục 2.</div>
+  </div>
 
   <div class="toc"><div class="toc-h">MỤC LỤC</div><div id="toc"></div></div>
 
@@ -657,7 +678,22 @@ HTML = f"""<!doctype html>
     {DOC_HTML}
   </div>
 
-  <h2 data-toc="Báo cáo PDF">10) Báo cáo PDF đầy đủ</h2>
+  <h2 data-toc="Kết luận">10) Kết luận &amp; khuyến nghị</h2>
+  <div class="callout key"><div><b>Cho Athena (studio Việt · dùng thương mại):</b><br>
+    • <b>Tiếng Việt</b> (voiceover / khoá học): <b>Gemini 2.5 Pro</b> — engine duy nhất đọc đúng VN; trả phí theo token (rẻ ở quy mô nhỏ).<br>
+    • <b>Tiếng Anh, khối lượng lớn</b>: <b>Kokoro</b> — nhanh gần real-time, Apache-2.0, tự host miễn phí bản quyền.<br>
+    • <b>Clone giọng</b>: mạnh nhất (IndexTTS2 / F5) nhưng <b>vướng license thương mại + không đọc VN + dao động mạnh</b> → chỉ hợp nội bộ/demo. Cần thương mại → <b>Chatterbox</b> (MIT) hoặc xin phép Bilibili.</div></div>
+  <div class="card">
+    <b>Cảnh báo trước khi quyết:</b>
+    <ul>
+      <li>UTMOS là điểm <i>dự đoán</i> — quyết định lớn nên xác nhận bằng <b>người nghe (MOS thật)</b>.</li>
+      <li>F5 &amp; IndexTTS2 <b>dao động mạnh</b> giữa các lần chạy → đừng tin điểm 1-lần.</li>
+      <li>Tốc độ đo trên <b>CPU</b>; production chạy GPU thì thứ tự có thể đổi.</li>
+      <li><b>Bản quyền giọng:</b> chỉ clone giọng đã có đồng ý / được cấp phép.</li>
+    </ul>
+  </div>
+
+  <h2 data-toc="Báo cáo PDF">11) Báo cáo PDF đầy đủ</h2>
   <div class="card">
     <ul>
       {''.join(f'<li><a href="pdf/{p}">{html.escape(t)}</a></li>' for p,t in PDFS if os.path.exists(os.path.join(D,"pdf",p)))}
