@@ -174,6 +174,13 @@ utmos_block = ('<div class="sub"><b>UTMOS</b> — mô hình dự đoán MOS (tha
                f'<table><tr><th>Engine</th><th>UTMOS (1–5)</th></tr>{rows(utmos, lambda v: f"{v:.2f}")}</table>'
                '<div class="note">Nhóm đầu (~4.5) chênh nhau trong khoảng nhiễu (mỗi engine n=1) → coi như <b>ngang nhau</b>; '
                'F5 & IndexTTS2 thấp hơn rõ. UTMOS là <i>dự đoán</i> — quyết định cuối vẫn nên xác nhận bằng MOS người nghe.</div>')
+wer_data = [("Kokoro", 1.5), ("Chatterbox", 1.5), ("Giọng gốc (người)", 3.0), ("StyleTTS2", 4.5),
+            ("IndexTTS2", 11.9), ("F5-TTS", 13.4), ("Gemini 2.5 Pro (LiteLLM)", 13.4)]
+wer_block = ('<div class="sub"><b>WER — độ rõ chữ (intelligibility)</b>: tỉ lệ lỗi khi Whisper nghe lại kịch bản (thấp = rõ). '
+             'Bù cho UTMOS (tự nhiên ≠ rõ chữ). Đã chuẩn hoá số/ngày kiểu Whisper.</div>'
+             f'<table><tr><th>Engine</th><th>WER %</th></tr>{rows(wer_data, lambda v: f"{v:.1f}%")}</table>'
+             '<div class="note"><b>Giọng người 3.0%</b> (near-floor) ⇒ metric hợp lệ. Kokoro/Chatterbox rõ nhất (~1.5%); '
+             'F5 & IndexTTS2 lỗi cao (~12–13%, khớp độ dao động); Gemini cũng ~13% (đọc biểu cảm/nối âm nên Whisper dễ nghe nhầm hơn). n=1.</div>')
 _REPVAR = [("Kokoro", "4.49", "±0.001", "2", "Deterministic (tái lập tuyệt đối)"),
            ("StyleTTS2", "4.23", "±0.052", "5", "Thấp"),
            ("Chatterbox", "4.27", "±0.121", "5", "Vừa"),
@@ -577,6 +584,7 @@ HTML = f"""<!doctype html>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> đo độ tự nhiên bằng thước đo hợp lệ. Bản đầu dùng proxy tự chế → chấm <b>giọng người 51.7 &lt; máy</b> (lỗi nặng), nên đã thay bằng <b>UTMOS</b> (mô hình dự đoán MOS chuẩn ngành).
     <b>→ Rút ra:</b> nhóm đầu ~4.5 gồm cả <b>giọng người</b> (Chatterbox/StyleTTS2/Kokoro/Gemini ≈ người); <b>F5 & IndexTTS2 thấp hơn</b>. Chênh nhóm đầu là nhiễu (n=1).</div></div>
   <div class="card">{utmos_block}</div>
+  <div class="card">{wer_block}</div>
   <div class="card">{rep_block}</div>
   {details("Chỉ số mô tả tín hiệu (proxy /100 cũ + biểu đồ) — KHÔNG phải chất lượng (bấm để mở)", nat_block)}
 
