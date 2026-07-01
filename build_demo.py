@@ -123,6 +123,17 @@ overview_rows = "\n".join(
     f'<td><a href="https://github.com/{r}" target="_blank">{r}</a></td></tr>'
     for e, m, sz, r in OVERVIEW)
 
+# (engine, license, dùng thương mại?) — nguồn: repo/model card mỗi engine
+LICENSE = [
+    ("Kokoro", "Apache-2.0 (code + weights)", "Được"),
+    ("Chatterbox", "MIT (code + weights)", "Được"),
+    ("F5-TTS", "code MIT · <b>weights CC-BY-NC</b>", "KHÔNG — weights phi thương mại (do dữ liệu Emilia)"),
+    ("StyleTTS2", "MIT + ràng buộc dùng giọng", "Có điều kiện — phải có quyền dùng giọng / công bố là giọng tổng hợp"),
+    ("IndexTTS2", "Custom (Bilibili)", "Phải xin phép (indexspeech@bilibili.com)"),
+    ("Gemini 2.5 Pro", "Google API (đóng, trả phí)", "Được (trả phí)"),
+]
+license_rows = "".join(f'<tr><td class="lbl">{e}</td><td>{lic}</td><td>{com}</td></tr>' for e, lic, com in LICENSE)
+
 
 def rows(data, fmt):
     return "\n".join(f"<tr><td>{html.escape(n)}</td><td>{fmt(v)}</td></tr>" for n, v in data)
@@ -441,8 +452,9 @@ HTML = f"""<!doctype html>
   <div class="callout key"><div class="ico">📌</div><div>
     <b>TL;DR</b> — Research so sánh <b>6 engine TTS</b> (5 open-source + Gemini) cho Athena, trên cùng kịch bản.<br>
     • Tự nhiên (UTMOS): nhóm đầu ~4.5 <b>ngang giọng người</b> (StyleTTS2 / Kokoro / Chatterbox / Gemini); F5 &amp; IndexTTS2 thấp hơn<br>
-    • Clone giống giọng nhất: <b>IndexTTS2</b><br>
-    • Nhanh / nhẹ nhất: <b>Kokoro</b><br>
+    • Clone giống giọng nhất: <b>IndexTTS2</b> — <i>nhưng vướng license thương mại</i><br>
+    • Nhanh / nhẹ nhất: <b>Kokoro</b> (Apache-2.0, thương mại thoải mái)<br>
+    • <b>Lưu ý license:</b> F5 &amp; IndexTTS2 weights KHÔNG cho dùng thương mại tự do (xem bảng License)<br>
     <span class="sub" style="margin:0">Cuộn xuống để nghe trực tiếp, xem biểu đồ & cách điều khiển (thời lượng · cảm xúc · phụ đề&nbsp;.srt).</span>
   </div></div>
 
@@ -466,6 +478,22 @@ HTML = f"""<!doctype html>
       {overview_rows}
     </table>
     <div class="note">Dung lượng = tổng weights tải về (Kokoro nhẹ nhất, IndexTTS2 nặng nhất ~11&nbsp;GB gồm cả model phụ trợ).</div>
+  </div>
+
+  <div class="callout key"><div><b>License — tiêu chí LOẠI TRỪ (xét trước chất lượng).</b>
+    Hai engine mạnh nhất về clone lại <b>vướng thương mại</b>: <b>F5-TTS</b> (weights CC-BY-NC — cấm thương mại) và <b>IndexTTS2</b> (phải xin phép Bilibili).
+    Nếu Athena dùng thương mại: an toàn nhất là <b>Kokoro</b> (Apache-2.0) &amp; <b>Chatterbox</b> (MIT), hoặc <b>Gemini</b> (API trả phí).</div></div>
+  <div class="card">
+    <table>
+      <tr><th>Engine</th><th>License</th><th>Dùng thương mại?</th></tr>
+      {license_rows}
+    </table>
+    <div class="note">Phân biệt <b>license code</b> vs <b>license weights</b> — nhiều model code MIT nhưng weights phi thương mại. Nguồn: model card / repo mỗi engine (kiểm lại tại thời điểm dùng):
+      <a href="https://huggingface.co/hexgrad/Kokoro-82M" target="_blank">Kokoro</a> ·
+      <a href="https://github.com/resemble-ai/chatterbox" target="_blank">Chatterbox</a> ·
+      <a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> ·
+      <a href="https://github.com/yl4579/StyleTTS2" target="_blank">StyleTTS2</a> ·
+      <a href="https://github.com/index-tts/index-tts" target="_blank">IndexTTS2</a>.</div>
   </div>
 
   <h2 data-toc="Nghe thử">1) Nghe thử — kịch bản dài (giọng gốc + 6 engine)</h2>
@@ -553,7 +581,7 @@ HTML = f"""<!doctype html>
     <table style="margin-top:14px">
       <tr><th>Dịch vụ</th><th>Sản phẩm</th><th>Giá tham khảo</th></tr>
       <tr><td><b>HumeAI</b> (Octave 2)</td><td>Audio (TTS, có cảm xúc)</td><td>~$7.60 / 1 triệu ký tự (API) · free 10k ký tự/tháng · ~½ giá ElevenLabs</td></tr>
-      <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>$1 /1M token input + <b>$20 /1M token audio output</b> · qua proxy LiteLLM nội bộ</td></tr>
+      <tr><td><b>Gemini 2.5 Pro TTS</b> (Google, qua LiteLLM)</td><td>Audio (TTS, giọng preset)</td><td>$1 /1M token input + <b>$20 /1M token audio output</b> · (bản Flash rẻ hơn: $0.5 / $10) · qua proxy LiteLLM</td></tr>
       <tr><td><b>Knowlify</b></td><td><b>Video</b> explainer (có narration)</td><td>$50–$500/tháng (video không giới hạn) · Studio ~$1,000/video</td></tr>
     </table>
     <div class="sub" style="margin-top:14px"><b>Gemini — điều khiển cảm xúc bằng prompt</b> (cùng câu, chỉ đổi mô tả style trong text):</div>
