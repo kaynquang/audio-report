@@ -163,6 +163,21 @@ utmos_block = ('<div class="sub"><b>UTMOS</b> — mô hình dự đoán MOS (tha
                f'<table><tr><th>Engine</th><th>UTMOS (1–5)</th></tr>{rows(utmos, lambda v: f"{v:.2f}")}</table>'
                '<div class="note">Nhóm đầu (~4.5) chênh nhau trong khoảng nhiễu (mỗi engine n=1) → coi như <b>ngang nhau</b>; '
                'F5 & IndexTTS2 thấp hơn rõ. UTMOS là <i>dự đoán</i> — quyết định cuối vẫn nên xác nhận bằng MOS người nghe.</div>')
+_REPVAR = [("Kokoro", "4.49", "±0.001", "2", "Deterministic (tái lập tuyệt đối)"),
+           ("StyleTTS2", "4.23", "±0.052", "5", "Thấp"),
+           ("Chatterbox", "4.27", "±0.121", "5", "Vừa"),
+           ("Gemini 2.5 Pro", "3.89", "±0.000", "2", "Deterministic"),
+           ("F5-TTS", "3.90", "<b>±0.232</b>", "5", "<b>CAO</b>"),
+           ("IndexTTS2", "3.56", "<b>±0.255</b>", "5", "<b>CAO</b>")]
+rep_block = ('<div class="sub">Chạy lặp cùng 1 câu để đo dao động run-to-run (UTMOS mean ± std). '
+             'Engine tự hồi quy/diffusion chạy 5×; Kokoro/Gemini 2× (đủ vì tất định).</div>'
+             '<table><tr><th>Engine</th><th>UTMOS mean</th><th>± std</th><th>n</th><th>Độ ổn định</th></tr>'
+             + "".join(f'<tr><td class="lbl">{n}</td><td>{mn}</td><td>{sd}</td><td>{c}</td><td>{v}</td></tr>'
+                      for n, mn, sd, c, v in _REPVAR) + '</table>'
+             '<div class="note"><b>Xác nhận critique #2:</b> F5 (±0.23) &amp; IndexTTS2 (±0.26) dao động mạnh (min–max lệch ~0.6 điểm) '
+             '→ <b>điểm 1-lần của chúng KHÔNG đáng tin</b>. Kokoro &amp; Gemini tái lập tuyệt đối (std≈0). '
+             'Nên chênh nhỏ giữa các engine trong 1 lần chạy là nhiễu — nhất là engine tự hồi quy. '
+             '(Câu test khác mục 2 nên giá trị tuyệt đối lệch; quan trọng là std.)</div>')
 nat_block = ('<div class="note"><b>Cảnh báo:</b> bảng proxy /100 dưới đây <b>bị lỗi</b> — nó chấm giọng người 51.7 &lt; máy, tức đo <b>độ đều tín hiệu</b> chứ KHÔNG phải chất lượng. Giữ lại chỉ để xem chỉ số thô, KHÔNG dùng để xếp hạng.</div>'
              f'<table><tr><th>Engine</th><th>Proxy /100 (không dùng xếp hạng)</th></tr>{rows(human, lambda v: f"{v:.1f}")}</table>'
              + img("compare_to_original.png", "Chỉ số âm học mỗi engine vs giọng gốc — mang tính MÔ TẢ (diagnostic), không phải điểm chất lượng."))
@@ -518,7 +533,7 @@ HTML = f"""<!doctype html>
 
   <div class="callout"><div><b>Phương pháp &amp; giới hạn</b> (đọc trước khi tin số):<br>
     • Đo trên <b>Apple M4 Pro, CPU-only (no GPU)</b> — thứ tự tốc độ có thể đổi trên GPU.<br>
-    • Mỗi engine chạy <b>n = 1</b> (chưa lặp) → chênh nhỏ giữa engine là <b>nhiễu</b>; cần ≥5 lần + mean±std để chắc.<br>
+    • Các mục nghe/biểu đồ dùng <b>n = 1</b>; riêng độ tự nhiên đã <b>chạy lặp 5×</b> đo mean±std (xem mục 2) — F5/IndexTTS2 dao động mạnh nên điểm 1-lần của chúng là nhiễu.<br>
     • Cấu hình: Kokoro voice <code>af_heart</code>, Gemini voice <code>Kore</code>, speed 1.0, còn lại mặc định mỗi engine.<br>
     • <b>Open-source ≠ miễn phí:</b> tự host tốn GPU/vận hành (TCO) vs Gemini API trả theo token.<br>
     • Độ giống: embedding <b>Resemblyzer</b>; sàn (2 người khác nhau) ≈ <b>0.61</b>, trần (cùng người) ≈ <b>0.98</b>.<br>
@@ -541,6 +556,7 @@ HTML = f"""<!doctype html>
   <div class="callout"><div class="ico">💡</div><div><b>Vì sao:</b> đo độ tự nhiên bằng thước đo hợp lệ. Bản đầu dùng proxy tự chế → chấm <b>giọng người 51.7 &lt; máy</b> (lỗi nặng), nên đã thay bằng <b>UTMOS</b> (mô hình dự đoán MOS chuẩn ngành).
     <b>→ Rút ra:</b> nhóm đầu ~4.5 gồm cả <b>giọng người</b> (Chatterbox/StyleTTS2/Kokoro/Gemini ≈ người); <b>F5 & IndexTTS2 thấp hơn</b>. Chênh nhóm đầu là nhiễu (n=1).</div></div>
   <div class="card">{utmos_block}</div>
+  <div class="card">{rep_block}</div>
   {details("Chỉ số mô tả tín hiệu (proxy /100 cũ + biểu đồ) — KHÔNG phải chất lượng (bấm để mở)", nat_block)}
 
   <h2 data-toc="Clone giọng">3) Clone giọng voiceover (neil) — cùng 1 giọng ref, 2 kịch bản</h2>
